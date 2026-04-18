@@ -1,0 +1,14 @@
+{
+  "background_color": "#000000",
+  "dir": "ltr",
+  "display": "fullscreen",
+  "name": "Skylink",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Skylink",
+  "start_url": "/index.html",
+  "theme_color": "#ff3535",
+  "id": "SkylinkMobile",
+  "description": "Mobile",
+  "lang": "en"
+}
