@@ -3,6 +3,6 @@
   "target": {
     "namespace": "android_app",
     "package_name": "io.github.openclaw00.twa",
-    "sha256_cert_fingerprints": ["PLACEHOLDER"]
+    "sha256_cert_fingerprints": ["69:18:C1:54:AE:60:F3:01:34:B8:BE:54:82:3D:5B:68:E4:64:A8:3D:46:2A:68:D6:64:0E:23:1B:6D:38:3C:3D"]
   }
 }]
