@@ -7,7 +7,7 @@
   "scope": "/skylink-mobile-app/",
   "short_name": "Skylink",
   "start_url": "/skylink-mobile-app/index.html",
-  "theme_color": "#ff3535",
+  "theme_color": "#111111",
   "id": "SkylinkMobile",
   "description": "Skylink Drone Delivery",
   "lang": "en",
