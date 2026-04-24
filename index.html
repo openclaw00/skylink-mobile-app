@@ -7,26 +7,71 @@
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <style>
+    /* Star Rating Modal */
+    .star-rating {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0 8px;
+    }
+    .star {
+      font-size: 40px;
+      color: #444;
+      cursor: pointer;
+      transition: color 0.15s, transform 0.15s;
+      line-height: 1;
+      user-select: none;
+    }
+    .star.active {
+      color: #FFD700;
+      transform: scale(1.15);
+    }
+    .star:hover {
+      color: #FFD700;
+      transform: scale(1.2);
+    }
+    .rating-sub {
+      color: #aaa;
+      font-size: 13px;
+      text-align: center;
+      margin: 4px 0 0;
+    }
+    .rating-label {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      min-height: 20px;
+      margin: 4px 0 16px;
+    }
+    #submit-rating-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .rating-thanks {
+      text-align: center;
+      padding: 24px 0 8px;
+    }
+    .rating-thanks .thanks-icon {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 12px;
+    }
+    .rating-thanks h3 {
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .rating-thanks p {
+      color: #aaa;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body class="app-body">
-  
-  <!-- Top Notification -->
-  <div id="top-notification" class="top-notification">
-    <div class="notification-icon">
-       <div class="drone-icon-red"></div>
-    </div>
-    <div class="notification-text">
-       <strong>SKYLINK</strong>
-       <p>Your drone is 2 minutes away!</p>
-       <small>SL-2847 · Drone của bạn sắp đến</small>
-    </div>
-    <div class="notification-time">now</div>
-    <button class="close-btn">&times;</button>
-  </div>
 
   <!-- Main Content Area -->
   <main id="app-content">
-    
+
     <!-- Home Tab -->
     <section id="tab-home" class="tab-view active">
       <!-- Drone Status Card -->
@@ -35,9 +80,9 @@
            <div class="drone-icon-box"></div>
            <div class="drone-header-info">
              <h3>Drone SL-2847</h3>
-             <p>En route · 2.4 km away</p>
+             <p data-i18n="enRoute">En route &middot; 2.4 km away</p>
            </div>
-           <span class="status-badge green">IN FLIGHT</span>
+           <span class="status-badge green" data-i18n="inFlight">IN FLIGHT</span>
          </div>
          <div class="progress-container">
            <div class="progress-labels">
@@ -48,31 +93,31 @@
          </div>
          <div class="telemetry-grid">
            <div class="tel-item">
-             <small>ALTITUDE</small>
+             <small data-i18n="altitude">ALTITUDE</small>
              <strong>120<span>m</span></strong>
            </div>
            <div class="tel-item">
-             <small>SPEED</small>
+             <small data-i18n="speed">SPEED</small>
              <strong>54<span>km/h</span></strong>
            </div>
            <div class="tel-item">
-             <small>BATTERY</small>
+             <small data-i18n="battery">BATTERY</small>
              <strong class="text-green">78<span>%</span></strong>
            </div>
            <div class="tel-item">
-             <small>WIND</small>
+             <small data-i18n="wind">WIND</small>
              <strong>12<span>km/h</span></strong>
            </div>
          </div>
-         <button class="btn btn-outline" onclick="switchTab('track')">VIEW FULL TRACKING &rarr;</button>
+         <button class="btn btn-outline" onclick="switchTab('track')" data-i18n="viewTracking">VIEW FULL TRACKING &rarr;</button>
       </div>
 
       <div class="quick-actions">
          <div class="action-card new-order" onclick="switchTab('order')">
            <div class="action-icon icon-red">+</div>
            <div class="action-text">
-             <h4>New Order</h4>
-             <p>Schedule delivery</p>
+             <h4 data-i18n="newOrder">New Order</h4>
+             <p data-i18n="scheduleDelivery">Schedule delivery</p>
            </div>
          </div>
          <div class="action-card">
@@ -80,8 +125,8 @@
              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
            </div>
            <div class="action-text">
-             <h4>History</h4>
-             <p>12 deliveries</p>
+             <h4 data-i18n="history">History</h4>
+             <p data-i18n="deliveriesCount">12 deliveries</p>
            </div>
          </div>
          <div class="action-card">
@@ -90,7 +135,7 @@
            </div>
            <div class="action-text">
              <h4>Skypass</h4>
-             <p>Gold tier</p>
+             <p data-i18n="goldTier">Gold tier</p>
            </div>
          </div>
       </div>
@@ -99,39 +144,39 @@
          <div class="weather-info">
            <span class="weather-icon">&#9925;&#65039;</span>
            <div>
-             <h4>Hanoi — Clear skies</h4>
-             <p>Optimal flying conditions · 29°C</p>
+             <h4 data-i18n="weatherTitle">Hanoi &mdash; Clear skies</h4>
+             <p data-i18n="weatherSub">Optimal flying conditions &middot; 29&deg;C</p>
            </div>
          </div>
-         <span class="status-badge text-green bold">&check; CLEAR</span>
+         <span class="status-badge text-green bold" data-i18n="clear">&check; CLEAR</span>
       </div>
     </section>
 
     <!-- Order Tab -->
     <section id="tab-order" class="tab-view">
       <div class="app-card route-card">
-        <h4 class="card-title">ROUTE</h4>
+        <h4 class="card-title" data-i18n="route">ROUTE</h4>
         <div class="route-inputs">
            <div class="route-line"></div>
            <div class="input-group">
              <span class="dot pickup"></span>
              <div class="input-wrapper">
-               <label>PICKUP</label>
-               <input type="text" placeholder="Enter pickup address..." />
+               <label data-i18n="pickup">PICKUP</label>
+               <input id="pickup-input" type="text" data-i18n-ph="pickupPh" placeholder="Enter pickup address..." />
              </div>
            </div>
            <div class="input-group">
              <span class="dot dropoff"></span>
              <div class="input-wrapper">
-               <label>DROP-OFF</label>
-               <input type="text" placeholder="Enter destination..." />
+               <label data-i18n="dropoff">DROP-OFF</label>
+               <input id="dropoff-input" type="text" data-i18n-ph="dropoffPh" placeholder="Enter destination..." />
              </div>
            </div>
         </div>
       </div>
 
       <div class="quick-select-section">
-        <h4 class="card-title">QUICK SELECT</h4>
+        <h4 class="card-title" data-i18n="quickSelect">QUICK SELECT</h4>
         <div class="quick-tags">
           <span class="tag">Hoan Kiem Lake</span>
           <span class="tag">Ba Dinh Square</span>
@@ -141,7 +186,7 @@
       </div>
 
       <div class="order-actions">
-        <button class="btn btn-primary btn-large glow" id="continue-btn" onclick="openPackageModal()">Continue &rarr;</button>
+        <button class="btn btn-primary btn-large glow" id="continue-btn" onclick="openPackageModal()" data-i18n="continueBtn">Continue &rarr;</button>
       </div>
     </section>
 
@@ -153,33 +198,33 @@
              <div class="drone-icon-box"></div>
              <div class="drone-header-info">
                <h3>SL-2847</h3>
-               <p>Skylink Mk-III · Cargo</p>
+               <p>Skylink Mk-III &middot; Cargo</p>
              </div>
-             <span class="status-badge outline-red">IN FLIGHT</span>
+             <span class="status-badge outline-red" data-i18n="inFlight">IN FLIGHT</span>
            </div>
            <div class="sn-text">SN: 847-HAN-22</div>
-           
+
            <div class="telemetry-grid compact mt-4">
              <div class="tel-item">
-               <small>ALT</small>
+               <small data-i18n="alt">ALT</small>
                <strong>117<span>m</span></strong>
              </div>
              <div class="tel-item">
-               <small>SPD</small>
+               <small data-i18n="spd">SPD</small>
                <strong>56<span>km/h</span></strong>
              </div>
              <div class="tel-item">
-               <small>WIND</small>
+               <small data-i18n="wind">WIND</small>
                <strong>14<span>km/h</span></strong>
              </div>
              <div class="tel-item">
-               <small>BAT</small>
+               <small data-i18n="bat">BAT</small>
                <strong class="text-green">57<span>%</span></strong>
              </div>
            </div>
            <div class="battery-bar-container">
              <div class="battery-labels">
-               <span>Battery</span>
+               <span data-i18n="batteryLabel">Battery</span>
                <span class="text-green">57%</span>
              </div>
              <div class="progress-bar"><div class="progress-fill green" style="width: 57%"></div></div>
@@ -187,30 +232,30 @@
          </div>
 
          <div class="app-card delivery-status-card">
-           <h4 class="card-title">DELIVERY STATUS</h4>
+           <h4 class="card-title" data-i18n="deliveryStatus">DELIVERY STATUS</h4>
            <div class="timeline-app">
               <div class="time-step done">
                  <span class="dot"></span>
-                 <div class="step-content"><strong>Order Placed</strong><span>14:22</span></div>
+                 <div class="step-content"><strong data-i18n="stepOrderPlaced">Order Placed</strong><span>14:22</span></div>
               </div>
               <div class="time-step done">
                  <span class="dot"></span>
-                 <div class="step-content"><strong>Drone Assigned</strong><span>14:23</span></div>
+                 <div class="step-content"><strong data-i18n="stepDroneAssigned">Drone Assigned</strong><span>14:23</span></div>
               </div>
               <div class="time-step done">
                  <span class="dot"></span>
-                 <div class="step-content"><strong>Picked Up</strong><span>14:25</span></div>
+                 <div class="step-content"><strong data-i18n="stepPickedUp">Picked Up</strong><span>14:25</span></div>
               </div>
               <div class="time-step active">
                  <span class="dot red-glow-dot"></span>
-                 <div class="step-content"><strong class="text-white">In Flight</strong><span class="text-red">Now</span></div>
+                 <div class="step-content"><strong class="text-white" data-i18n="stepInFlight">In Flight</strong><span class="text-red" data-i18n="now">Now</span></div>
               </div>
               <div class="time-step pending">
                  <span class="dot empty"></span>
-                 <div class="step-content"><strong>Delivered</strong></div>
+                 <div class="step-content"><strong data-i18n="stepDelivered">Delivered</strong></div>
               </div>
            </div>
-           <button class="btn btn-primary btn-rate">&starf; Rate Delivery</button>
+           <button class="btn btn-primary btn-rate" id="rate-delivery-btn" onclick="openRatingModal()">&starf; <span data-i18n="rateDelivery">Rate Delivery</span></button>
          </div>
        </div>
     </section>
@@ -219,17 +264,17 @@
     <section id="tab-profile" class="tab-view">
       <div class="profile-header">
          <h2>Nguyen Van An</h2>
-         <span class="tier-badge">&starf; GOLD TIER</span>
+         <span class="tier-badge">&starf; <span data-i18n="goldTierBadge">GOLD TIER</span></span>
       </div>
 
       <div class="stats-row">
          <div class="stat-card">
            <strong>12</strong>
-           <span>Deliveries</span>
+           <span data-i18n="deliveries">Deliveries</span>
          </div>
          <div class="stat-card">
            <strong>4.9&starf;</strong>
-           <span>Rating</span>
+           <span data-i18n="rating">Rating</span>
          </div>
          <div class="stat-card">
            <strong>Gold</strong>
@@ -243,20 +288,20 @@
            <div class="pts"><strong>1,240</strong> <span>pts</span></div>
            <div class="drone-bg-icon"></div>
          </div>
-         <p class="to-plat">260 pts to Platinum</p>
+         <p class="to-plat" data-i18n="toPlatinum">260 pts to Platinum</p>
          <div class="progress-bar mt-2"><div class="progress-fill red-gradient" style="width: 80%"></div></div>
       </div>
 
-      <h3 class="section-title">Recent Deliveries</h3>
+      <h3 class="section-title" data-i18n="recentDeliveries">Recent Deliveries</h3>
       <div class="delivery-list">
          <div class="app-card list-item">
             <div class="drone-icon-sm"></div>
             <div class="item-details">
               <strong>SL-2844</strong>
-              <p>Tran Hung Dao &rarr; Ba Dinh · 1.2kg</p>
+              <p>Tran Hung Dao &rarr; Ba Dinh &middot; 1.2kg</p>
             </div>
             <div class="item-meta">
-              <span>Apr 21</span>
+              <span data-i18n="apr21">Apr 21</span>
               <span class="check-icon">&check;</span>
             </div>
          </div>
@@ -264,10 +309,10 @@
             <div class="drone-icon-sm"></div>
             <div class="item-details">
               <strong>SL-2831</strong>
-              <p>Hoan Kiem &rarr; Tay Ho · 0.5kg</p>
+              <p>Hoan Kiem &rarr; Tay Ho &middot; 0.5kg</p>
             </div>
             <div class="item-meta">
-              <span>Apr 19</span>
+              <span data-i18n="apr19">Apr 19</span>
               <span class="check-icon">&check;</span>
             </div>
          </div>
@@ -275,25 +320,25 @@
             <div class="drone-icon-sm"></div>
             <div class="item-details">
               <strong>SL-2819</strong>
-              <p>Dong Da &rarr; Cau Giay · 2.8kg</p>
+              <p>Dong Da &rarr; Cau Giay &middot; 2.8kg</p>
             </div>
             <div class="item-meta">
-              <span>Apr 17</span>
+              <span data-i18n="apr17">Apr 17</span>
               <span class="check-icon">&check;</span>
             </div>
          </div>
       </div>
 
-      <h3 class="section-title">Cài đặt</h3>
+      <h3 class="section-title" data-i18n="settings">C&#xE0;i &#x111;&#x1EB7;t</h3>
       <div class="app-card settings-card">
          <div class="setting-item">
            <div class="setting-text">
-             <strong>Ngôn ngữ</strong>
-             <p>Tiếng Việt</p>
+             <strong data-i18n="language">Ng&#xF4;n ng&#x1EEF;</strong>
+             <p data-i18n="languageValue">Ti&#x1EBF;ng Vi&#x1EC7;t</p>
            </div>
            <div class="lang-switch">
-             <span class="lang active">VI</span>
-             <span class="lang">EN</span>
+             <span class="lang active" id="lang-vi">VI</span>
+             <span class="lang" id="lang-en">EN</span>
            </div>
          </div>
       </div>
@@ -304,35 +349,35 @@
   <nav class="bottom-nav">
     <a href="#" class="nav-item active" onclick="switchTab('home')">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-      <span>Home</span>
+      <span data-i18n="navHome">Home</span>
     </a>
     <a href="#" class="nav-item" onclick="switchTab('order')">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-      <span>Order</span>
+      <span data-i18n="navOrder">Order</span>
     </a>
     <a href="#" class="nav-item" onclick="switchTab('track')">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-      <span>Track</span>
+      <span data-i18n="navTrack">Track</span>
     </a>
     <a href="#" class="nav-item" onclick="switchTab('profile')">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      <span>Profile</span>
+      <span data-i18n="navProfile">Profile</span>
     </a>
   </nav>
 
   <!-- Package Size Selection Modal -->
   <div id="package-modal" class="modal">
     <div class="modal-content">
-      <h3 class="modal-title">Select Package Size</h3>
+      <h3 class="modal-title" data-i18n="selectPackageSize">Select Package Size</h3>
       <div class="pkg-options">
         <div class="pkg-option" onclick="selectPackage(this)">
           <div class="pkg-icon">&#128230;</div>
           <div class="pkg-info">
-            <strong>Small</strong>
-            <p>Up to 1 kg</p>
+            <strong data-i18n="small">Small</strong>
+            <p data-i18n="upTo1kg">Up to 1 kg</p>
           </div>
           <div class="pkg-price">
-            <strong>45,000₫</strong>
+            <strong>45,000&#8363;</strong>
             <p>~8 min</p>
           </div>
           <div class="radio-circle"></div>
@@ -340,11 +385,11 @@
         <div class="pkg-option" onclick="selectPackage(this)">
           <div class="pkg-icon">&#128717;</div>
           <div class="pkg-info">
-            <strong>Medium</strong>
-            <p>Up to 3 kg</p>
+            <strong data-i18n="medium">Medium</strong>
+            <p data-i18n="upTo3kg">Up to 3 kg</p>
           </div>
           <div class="pkg-price">
-            <strong>75,000₫</strong>
+            <strong>75,000&#8363;</strong>
             <p>~10 min</p>
           </div>
           <div class="radio-circle"></div>
@@ -352,19 +397,19 @@
         <div class="pkg-option" onclick="selectPackage(this)">
           <div class="pkg-icon">&#128235;</div>
           <div class="pkg-info">
-            <strong>Large</strong>
-            <p>Up to 5 kg</p>
+            <strong data-i18n="large">Large</strong>
+            <p data-i18n="upTo5kg">Up to 5 kg</p>
           </div>
           <div class="pkg-price">
-            <strong>120,000₫</strong>
+            <strong>120,000&#8363;</strong>
             <p>~14 min</p>
           </div>
           <div class="radio-circle"></div>
         </div>
       </div>
       <div class="modal-actions">
-        <button class="btn btn-outline" onclick="closePackageModal()">Back</button>
-        <button class="btn btn-primary glow" onclick="openSpeedModal()">Continue &rarr;</button>
+        <button class="btn btn-outline" onclick="closePackageModal()" data-i18n="back">Back</button>
+        <button class="btn btn-primary glow" onclick="openSpeedModal()" data-i18n="continueBtn">Continue &rarr;</button>
       </div>
     </div>
   </div>
@@ -372,16 +417,16 @@
   <!-- Delivery Speed Selection Modal -->
   <div id="speed-modal" class="modal">
     <div class="modal-content">
-      <h3 class="modal-title">Select Delivery Speed</h3>
+      <h3 class="modal-title" data-i18n="selectDeliverySpeed">Select Delivery Speed</h3>
       <div class="pkg-options">
         <div class="pkg-option" onclick="selectSpeed(this)">
           <div class="pkg-icon">&#128640;</div>
           <div class="pkg-info">
             <strong>UrgentWing</strong>
-            <p>Immediate priority dispatch</p>
+            <p data-i18n="urgentDesc">Immediate priority dispatch</p>
           </div>
           <div class="pkg-price">
-            <strong>+65,000₫</strong>
+            <strong>+65,000&#8363;</strong>
             <p>ASAP</p>
           </div>
           <div class="radio-circle"></div>
@@ -389,19 +434,39 @@
         <div class="pkg-option" onclick="selectSpeed(this)">
           <div class="pkg-icon">&#128338;</div>
           <div class="pkg-info">
-            <strong>Standard</strong>
-            <p>Flexible same-day window</p>
+            <strong data-i18n="standard">Standard</strong>
+            <p data-i18n="standardDesc">Flexible same-day window</p>
           </div>
           <div class="pkg-price">
-            <strong>Free</strong>
-            <p>Today</p>
+            <strong data-i18n="free">Free</strong>
+            <p data-i18n="today">Today</p>
           </div>
           <div class="radio-circle"></div>
         </div>
       </div>
       <div class="modal-actions">
-        <button class="btn btn-outline" onclick="closeSpeedModal()">Back</button>
-        <button class="btn btn-primary glow" onclick="finalizeOrder()">Confirm Order &rarr;</button>
+        <button class="btn btn-outline" onclick="closeSpeedModal()" data-i18n="back">Back</button>
+        <button class="btn btn-primary glow" onclick="finalizeOrder()" data-i18n="confirmOrder">Confirm Order &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Star Rating Modal -->
+  <div id="rating-modal" class="modal">
+    <div class="modal-content" id="rating-modal-content">
+      <h3 class="modal-title" data-i18n="rateModalTitle">Rate Your Delivery</h3>
+      <p class="rating-sub" data-i18n="rateModalSub">How was your experience with drone SL-2847?</p>
+      <div class="star-rating" id="star-rating">
+        <span class="star" data-value="1">&#9733;</span>
+        <span class="star" data-value="2">&#9733;</span>
+        <span class="star" data-value="3">&#9733;</span>
+        <span class="star" data-value="4">&#9733;</span>
+        <span class="star" data-value="5">&#9733;</span>
+      </div>
+      <p class="rating-label" id="rating-label" data-i18n="rateSelectPrompt">Tap a star to rate</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeRatingModal()" data-i18n="cancel">Cancel</button>
+        <button class="btn btn-primary glow" id="submit-rating-btn" onclick="submitRating()" disabled data-i18n="submitRating">Submit Rating</button>
       </div>
     </div>
   </div>
