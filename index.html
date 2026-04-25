@@ -9,219 +9,114 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <style>
     /* Star Rating Modal */
-    .star-rating {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 20px 0 8px;
-    }
-    .star {
-      font-size: 40px;
-      color: #444;
-      cursor: pointer;
-      transition: color 0.15s, transform 0.15s;
-      line-height: 1;
-      user-select: none;
-    }
-    .star.active {
-      color: #FFD700;
-      transform: scale(1.15);
-    }
-    .star:hover {
-      color: #FFD700;
-      transform: scale(1.2);
-    }
-    .rating-sub {
-      color: #aaa;
-      font-size: 13px;
-      text-align: center;
-      margin: 4px 0 0;
-    }
-    .rating-label {
-      text-align: center;
-      font-size: 13px;
-      color: #888;
-      min-height: 20px;
-      margin: 4px 0 16px;
-    }
-    #submit-rating-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-    .rating-thanks {
-      text-align: center;
-      padding: 24px 0 8px;
-    }
-    .rating-thanks .thanks-icon {
-      font-size: 48px;
-      display: block;
-      margin-bottom: 12px;
-    }
-    .rating-thanks h3 {
-      color: #fff;
-      margin-bottom: 8px;
-    }
-    .rating-thanks p {
-      color: #aaa;
-      font-size: 14px;
-    }
+    .star-rating { display: flex; justify-content: center; gap: 10px; margin: 20px 0 8px; }
+    .star { font-size: 40px; color: #444; cursor: pointer; transition: color 0.15s, transform 0.15s; line-height: 1; user-select: none; }
+    .star.active { color: #FFD700; transform: scale(1.15); }
+    .star:hover { color: #FFD700; transform: scale(1.2); }
+    .rating-sub { color: #aaa; font-size: 13px; text-align: center; margin: 4px 0 0; }
+    .rating-label { text-align: center; font-size: 13px; color: #888; min-height: 20px; margin: 4px 0 16px; }
+    #submit-rating-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .rating-thanks { text-align: center; padding: 24px 0 8px; }
+    .rating-thanks .thanks-icon { font-size: 48px; display: block; margin-bottom: 12px; }
+    .rating-thanks h3 { color: #fff; margin-bottom: 8px; }
+    .rating-thanks p { color: #aaa; font-size: 14px; }
 
     /* ── Voice Order Button ── */
     #voice-order-btn {
       position: fixed;
       right: 20px;
       bottom: calc(var(--nav-height) + 16px);
-      width: 56px;
-      height: 56px;
+      width: 56px; height: 56px;
       border-radius: 50%;
       background: var(--accent-red);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
       z-index: 60;
-      box-shadow: 0 4px 20px rgba(242, 35, 56, 0.45);
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(242,35,56,0.45);
+      transition: transform 0.2s;
     }
-    #voice-order-btn:active {
-      transform: scale(0.92);
-    }
-    #voice-order-btn.listening {
-      animation: pulse-ring 1.4s ease-out infinite;
-      box-shadow: 0 0 0 0 rgba(242, 35, 56, 0.5);
-    }
+    #voice-order-btn:active { transform: scale(0.92); }
+    #voice-order-btn.listening { animation: pulse-ring 1.4s ease-out infinite; }
     @keyframes pulse-ring {
-      0%   { box-shadow: 0 0 0 0   rgba(242, 35, 56, 0.5); }
-      70%  { box-shadow: 0 0 0 16px rgba(242, 35, 56, 0);   }
-      100% { box-shadow: 0 0 0 0   rgba(242, 35, 56, 0);    }
+      0%  { box-shadow: 0 0 0 0   rgba(242,35,56,0.5); }
+      70% { box-shadow: 0 0 0 16px rgba(242,35,56,0); }
+      100%{ box-shadow: 0 0 0 0   rgba(242,35,56,0); }
     }
     #voice-order-btn svg { pointer-events: none; }
 
-    /* ── Voice Modal Overlay ── */
+    /* ── Voice Modal ── */
     #voice-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(6px);
-      z-index: 300;
-      align-items: flex-end;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+      z-index: 300; align-items: flex-end;
     }
     #voice-modal.show { display: flex; }
-
     #voice-modal-content {
-      background: var(--bg-color);
-      width: 100%;
+      background: var(--bg-color); width: 100%;
       border-radius: 24px 24px 0 0;
       padding: 28px 24px 36px;
       border-top: 1px solid rgba(255,255,255,0.08);
       animation: slideUp 0.3s ease-out;
     }
-
-    .voice-modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+    .voice-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .voice-modal-header h3 { color: #fff; font-size: 18px; }
     .voice-close-btn {
-      background: rgba(255,255,255,0.08);
-      border: none;
-      color: #aaa;
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.08); border: none; color: #aaa;
+      width: 32px; height: 32px; border-radius: 50%; font-size: 18px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
-
-    .voice-status {
-      text-align: center;
-      padding: 20px 0 8px;
-    }
+    .voice-status { text-align: center; padding: 20px 0 8px; }
     .voice-orb {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      background: rgba(242, 35, 56, 0.12);
-      border: 2px solid rgba(242, 35, 56, 0.3);
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(242,35,56,0.12);
+      border: 2px solid rgba(242,35,56,0.3);
       margin: 0 auto 16px;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.3s;
     }
     .voice-orb.active {
-      background: rgba(242, 35, 56, 0.2);
-      border-color: var(--accent-red);
+      background: rgba(242,35,56,0.2); border-color: var(--accent-red);
       animation: orb-pulse 1.2s ease-in-out infinite;
     }
     .voice-orb.speaking {
-      background: rgba(46, 204, 113, 0.15);
-      border-color: var(--accent-green);
+      background: rgba(46,204,113,0.15); border-color: var(--accent-green);
       animation: orb-pulse-green 1.2s ease-in-out infinite;
     }
     @keyframes orb-pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(242,35,56,0.3); }
-      50%       { box-shadow: 0 0 0 14px rgba(242,35,56,0); }
+      0%,100%{ box-shadow: 0 0 0 0 rgba(242,35,56,0.3); }
+      50%    { box-shadow: 0 0 0 14px rgba(242,35,56,0); }
     }
     @keyframes orb-pulse-green {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(46,204,113,0.3); }
-      50%       { box-shadow: 0 0 0 14px rgba(46,204,113,0); }
+      0%,100%{ box-shadow: 0 0 0 0 rgba(46,204,113,0.3); }
+      50%    { box-shadow: 0 0 0 14px rgba(46,204,113,0); }
     }
-
-    .voice-status-text {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
+    .voice-status-text { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }
     .voice-transcript {
-      font-size: 15px;
-      color: #fff;
-      min-height: 44px;
-      text-align: center;
-      padding: 0 8px;
-      line-height: 1.5;
+      font-size: 15px; color: #fff; min-height: 44px;
+      text-align: center; padding: 0 8px; line-height: 1.5;
     }
-
     .voice-start-btn {
-      width: 100%;
-      margin-top: 24px;
-      background: var(--accent-red);
-      color: #fff;
-      border: none;
-      border-radius: 14px;
-      padding: 16px;
-      font-size: 16px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
+      width: 100%; margin-top: 24px;
+      background: var(--accent-red); color: #fff; border: none;
+      border-radius: 14px; padding: 16px; font-size: 16px; font-weight: 600;
+      font-family: inherit; cursor: pointer;
       box-shadow: 0 4px 20px rgba(242,35,56,0.3);
-      transition: opacity 0.2s;
     }
     .voice-start-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .voice-stop-btn {
-      width: 100%;
-      margin-top: 12px;
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px;
-      padding: 14px;
-      font-size: 15px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
+      width: 100%; margin-top: 12px; background: transparent;
+      color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 600;
+      font-family: inherit; cursor: pointer;
     }
   </style>
 </head>
 <body class="app-body">
 
-  <!-- Main Content Area -->
   <main id="app-content">
 
     <!-- Home Tab -->
     <section id="tab-home" class="tab-view active">
-      <!-- Drone Status Card -->
       <div class="app-card drone-status-card">
          <div class="drone-header">
            <div class="drone-icon-box"></div>
@@ -232,69 +127,33 @@
            <span class="status-badge green" data-i18n="inFlight">IN FLIGHT</span>
          </div>
          <div class="progress-container">
-           <div class="progress-labels">
-             <span class="pct">0%</span>
-             <span class="pct">100%</span>
-           </div>
-           <div class="progress-bar"><div class="progress-fill red-gradient" style="width: 78%"></div></div>
+           <div class="progress-labels"><span class="pct">0%</span><span class="pct">100%</span></div>
+           <div class="progress-bar"><div class="progress-fill red-gradient" style="width:78%"></div></div>
          </div>
          <div class="telemetry-grid">
-           <div class="tel-item">
-             <small data-i18n="altitude">ALTITUDE</small>
-             <strong>120<span>m</span></strong>
-           </div>
-           <div class="tel-item">
-             <small data-i18n="speed">SPEED</small>
-             <strong>54<span>km/h</span></strong>
-           </div>
-           <div class="tel-item">
-             <small data-i18n="battery">BATTERY</small>
-             <strong class="text-green">78<span>%</span></strong>
-           </div>
-           <div class="tel-item">
-             <small data-i18n="wind">WIND</small>
-             <strong>12<span>km/h</span></strong>
-           </div>
+           <div class="tel-item"><small data-i18n="altitude">ALTITUDE</small><strong>120<span>m</span></strong></div>
+           <div class="tel-item"><small data-i18n="speed">SPEED</small><strong>54<span>km/h</span></strong></div>
+           <div class="tel-item"><small data-i18n="battery">BATTERY</small><strong class="text-green">78<span>%</span></strong></div>
+           <div class="tel-item"><small data-i18n="wind">WIND</small><strong>12<span>km/h</span></strong></div>
          </div>
          <button class="btn btn-outline" onclick="switchTab('track')" data-i18n="viewTracking">VIEW FULL TRACKING &rarr;</button>
       </div>
-
       <div class="quick-actions">
          <div class="action-card new-order" onclick="switchTab('order')">
            <div class="action-icon icon-red">+</div>
-           <div class="action-text">
-             <h4 data-i18n="newOrder">New Order</h4>
-             <p data-i18n="scheduleDelivery">Schedule delivery</p>
-           </div>
+           <div class="action-text"><h4 data-i18n="newOrder">New Order</h4><p data-i18n="scheduleDelivery">Schedule delivery</p></div>
          </div>
          <div class="action-card">
-           <div class="action-icon icon-gray">
-             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-           </div>
-           <div class="action-text">
-             <h4 data-i18n="history">History</h4>
-             <p data-i18n="deliveriesCount">12 deliveries</p>
-           </div>
+           <div class="action-icon icon-gray"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+           <div class="action-text"><h4 data-i18n="history">History</h4><p data-i18n="deliveriesCount">12 deliveries</p></div>
          </div>
          <div class="action-card">
-           <div class="action-icon icon-gray">
-             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-           </div>
-           <div class="action-text">
-             <h4>Skypass</h4>
-             <p data-i18n="goldTier">Gold tier</p>
-           </div>
+           <div class="action-icon icon-gray"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
+           <div class="action-text"><h4>Skypass</h4><p data-i18n="goldTier">Gold tier</p></div>
          </div>
       </div>
-
       <div class="app-card weather-card">
-         <div class="weather-info">
-           <span class="weather-icon">&#9925;&#65039;</span>
-           <div>
-             <h4 data-i18n="weatherTitle">Hanoi &mdash; Clear skies</h4>
-             <p data-i18n="weatherSub">Optimal flying conditions &middot; 29&deg;C</p>
-           </div>
-         </div>
+         <div class="weather-info"><span class="weather-icon">&#9925;&#65039;</span><div><h4 data-i18n="weatherTitle">Hanoi &mdash; Clear skies</h4><p data-i18n="weatherSub">Optimal flying conditions &middot; 29&deg;C</p></div></div>
          <span class="status-badge text-green bold" data-i18n="clear">&check; CLEAR</span>
       </div>
     </section>
@@ -321,17 +180,13 @@
            </div>
         </div>
       </div>
-
       <div class="quick-select-section">
         <h4 class="card-title" data-i18n="quickSelect">QUICK SELECT</h4>
         <div class="quick-tags">
-          <span class="tag">Hoan Kiem Lake</span>
-          <span class="tag">Ba Dinh Square</span>
-          <span class="tag">West Lake</span>
-          <span class="tag">Hanoi Station</span>
+          <span class="tag">Hoan Kiem Lake</span><span class="tag">Ba Dinh Square</span>
+          <span class="tag">West Lake</span><span class="tag">Hanoi Station</span>
         </div>
       </div>
-
       <div class="order-actions">
         <button class="btn btn-primary btn-large glow" id="continue-btn" onclick="openPackageModal()" data-i18n="continueBtn">Continue &rarr;</button>
       </div>
@@ -343,64 +198,29 @@
          <div class="app-card tracking-card">
            <div class="drone-header">
              <div class="drone-icon-box"></div>
-             <div class="drone-header-info">
-               <h3>SL-2847</h3>
-               <p>Skylink Mk-III &middot; Cargo</p>
-             </div>
+             <div class="drone-header-info"><h3>SL-2847</h3><p>Skylink Mk-III &middot; Cargo</p></div>
              <span class="status-badge outline-red" data-i18n="inFlight">IN FLIGHT</span>
            </div>
            <div class="sn-text">SN: 847-HAN-22</div>
-
            <div class="telemetry-grid compact mt-4">
-             <div class="tel-item">
-               <small data-i18n="alt">ALT</small>
-               <strong>117<span>m</span></strong>
-             </div>
-             <div class="tel-item">
-               <small data-i18n="spd">SPD</small>
-               <strong>56<span>km/h</span></strong>
-             </div>
-             <div class="tel-item">
-               <small data-i18n="wind">WIND</small>
-               <strong>14<span>km/h</span></strong>
-             </div>
-             <div class="tel-item">
-               <small data-i18n="bat">BAT</small>
-               <strong class="text-green">57<span>%</span></strong>
-             </div>
+             <div class="tel-item"><small data-i18n="alt">ALT</small><strong>117<span>m</span></strong></div>
+             <div class="tel-item"><small data-i18n="spd">SPD</small><strong>56<span>km/h</span></strong></div>
+             <div class="tel-item"><small data-i18n="wind">WIND</small><strong>14<span>km/h</span></strong></div>
+             <div class="tel-item"><small data-i18n="bat">BAT</small><strong class="text-green">57<span>%</span></strong></div>
            </div>
            <div class="battery-bar-container">
-             <div class="battery-labels">
-               <span data-i18n="batteryLabel">Battery</span>
-               <span class="text-green">57%</span>
-             </div>
-             <div class="progress-bar"><div class="progress-fill green" style="width: 57%"></div></div>
+             <div class="battery-labels"><span data-i18n="batteryLabel">Battery</span><span class="text-green">57%</span></div>
+             <div class="progress-bar"><div class="progress-fill green" style="width:57%"></div></div>
            </div>
          </div>
-
          <div class="app-card delivery-status-card">
            <h4 class="card-title" data-i18n="deliveryStatus">DELIVERY STATUS</h4>
            <div class="timeline-app">
-              <div class="time-step done">
-                 <span class="dot"></span>
-                 <div class="step-content"><strong data-i18n="stepOrderPlaced">Order Placed</strong><span>14:22</span></div>
-              </div>
-              <div class="time-step done">
-                 <span class="dot"></span>
-                 <div class="step-content"><strong data-i18n="stepDroneAssigned">Drone Assigned</strong><span>14:23</span></div>
-              </div>
-              <div class="time-step done">
-                 <span class="dot"></span>
-                 <div class="step-content"><strong data-i18n="stepPickedUp">Picked Up</strong><span>14:25</span></div>
-              </div>
-              <div class="time-step active">
-                 <span class="dot red-glow-dot"></span>
-                 <div class="step-content"><strong class="text-white" data-i18n="stepInFlight">In Flight</strong><span class="text-red" data-i18n="now">Now</span></div>
-              </div>
-              <div class="time-step pending">
-                 <span class="dot empty"></span>
-                 <div class="step-content"><strong data-i18n="stepDelivered">Delivered</strong></div>
-              </div>
+              <div class="time-step done"><span class="dot"></span><div class="step-content"><strong data-i18n="stepOrderPlaced">Order Placed</strong><span>14:22</span></div></div>
+              <div class="time-step done"><span class="dot"></span><div class="step-content"><strong data-i18n="stepDroneAssigned">Drone Assigned</strong><span>14:23</span></div></div>
+              <div class="time-step done"><span class="dot"></span><div class="step-content"><strong data-i18n="stepPickedUp">Picked Up</strong><span>14:25</span></div></div>
+              <div class="time-step active"><span class="dot red-glow-dot"></span><div class="step-content"><strong class="text-white" data-i18n="stepInFlight">In Flight</strong><span class="text-red" data-i18n="now">Now</span></div></div>
+              <div class="time-step pending"><span class="dot empty"></span><div class="step-content"><strong data-i18n="stepDelivered">Delivered</strong></div></div>
            </div>
            <button class="btn btn-primary btn-rate" id="rate-delivery-btn" onclick="openRatingModal()">&starf; <span data-i18n="rateDelivery">Rate Delivery</span></button>
          </div>
@@ -409,84 +229,29 @@
 
     <!-- Profile Tab -->
     <section id="tab-profile" class="tab-view">
-      <div class="profile-header">
-         <h2>Nguyen Van An</h2>
-         <span class="tier-badge">&starf; <span data-i18n="goldTierBadge">GOLD TIER</span></span>
-      </div>
-
+      <div class="profile-header"><h2>Nguyen Van An</h2><span class="tier-badge">&starf; <span data-i18n="goldTierBadge">GOLD TIER</span></span></div>
       <div class="stats-row">
-         <div class="stat-card">
-           <strong>12</strong>
-           <span data-i18n="deliveries">Deliveries</span>
-         </div>
-         <div class="stat-card">
-           <strong>4.9&starf;</strong>
-           <span data-i18n="rating">Rating</span>
-         </div>
-         <div class="stat-card">
-           <strong>Gold</strong>
-           <span>Skypass</span>
-         </div>
+         <div class="stat-card"><strong>12</strong><span data-i18n="deliveries">Deliveries</span></div>
+         <div class="stat-card"><strong>4.9&starf;</strong><span data-i18n="rating">Rating</span></div>
+         <div class="stat-card"><strong>Gold</strong><span>Skypass</span></div>
       </div>
-
       <div class="app-card skypass-card">
-         <h4 class="card-title text-red" style="margin-bottom: 8px;">SKYPASS GOLD</h4>
-         <div class="pts-row">
-           <div class="pts"><strong>1,240</strong> <span>pts</span></div>
-           <div class="drone-bg-icon"></div>
-         </div>
+         <h4 class="card-title text-red" style="margin-bottom:8px;">SKYPASS GOLD</h4>
+         <div class="pts-row"><div class="pts"><strong>1,240</strong> <span>pts</span></div><div class="drone-bg-icon"></div></div>
          <p class="to-plat" data-i18n="toPlatinum">260 pts to Platinum</p>
-         <div class="progress-bar mt-2"><div class="progress-fill red-gradient" style="width: 80%"></div></div>
+         <div class="progress-bar mt-2"><div class="progress-fill red-gradient" style="width:80%"></div></div>
       </div>
-
       <h3 class="section-title" data-i18n="recentDeliveries">Recent Deliveries</h3>
       <div class="delivery-list">
-         <div class="app-card list-item">
-            <div class="drone-icon-sm"></div>
-            <div class="item-details">
-              <strong>SL-2844</strong>
-              <p>Tran Hung Dao &rarr; Ba Dinh &middot; 1.2kg</p>
-            </div>
-            <div class="item-meta">
-              <span data-i18n="apr21">Apr 21</span>
-              <span class="check-icon">&check;</span>
-            </div>
-         </div>
-         <div class="app-card list-item">
-            <div class="drone-icon-sm"></div>
-            <div class="item-details">
-              <strong>SL-2831</strong>
-              <p>Hoan Kiem &rarr; Tay Ho &middot; 0.5kg</p>
-            </div>
-            <div class="item-meta">
-              <span data-i18n="apr19">Apr 19</span>
-              <span class="check-icon">&check;</span>
-            </div>
-         </div>
-         <div class="app-card list-item">
-            <div class="drone-icon-sm"></div>
-            <div class="item-details">
-              <strong>SL-2819</strong>
-              <p>Dong Da &rarr; Cau Giay &middot; 2.8kg</p>
-            </div>
-            <div class="item-meta">
-              <span data-i18n="apr17">Apr 17</span>
-              <span class="check-icon">&check;</span>
-            </div>
-         </div>
+         <div class="app-card list-item"><div class="drone-icon-sm"></div><div class="item-details"><strong>SL-2844</strong><p>Tran Hung Dao &rarr; Ba Dinh &middot; 1.2kg</p></div><div class="item-meta"><span data-i18n="apr21">Apr 21</span><span class="check-icon">&check;</span></div></div>
+         <div class="app-card list-item"><div class="drone-icon-sm"></div><div class="item-details"><strong>SL-2831</strong><p>Hoan Kiem &rarr; Tay Ho &middot; 0.5kg</p></div><div class="item-meta"><span data-i18n="apr19">Apr 19</span><span class="check-icon">&check;</span></div></div>
+         <div class="app-card list-item"><div class="drone-icon-sm"></div><div class="item-details"><strong>SL-2819</strong><p>Dong Da &rarr; Cau Giay &middot; 2.8kg</p></div><div class="item-meta"><span data-i18n="apr17">Apr 17</span><span class="check-icon">&check;</span></div></div>
       </div>
-
       <h3 class="section-title" data-i18n="settings">C&#xE0;i &#x111;&#x1EB7;t</h3>
       <div class="app-card settings-card">
          <div class="setting-item">
-           <div class="setting-text">
-             <strong data-i18n="language">Ng&#xF4;n ng&#x1EEF;</strong>
-             <p data-i18n="languageValue">Ti&#x1EBF;ng Vi&#x1EC7;t</p>
-           </div>
-           <div class="lang-switch">
-             <span class="lang active" id="lang-vi">VI</span>
-             <span class="lang" id="lang-en">EN</span>
-           </div>
+           <div class="setting-text"><strong data-i18n="language">Ng&#xF4;n ng&#x1EEF;</strong><p data-i18n="languageValue">Ti&#x1EBF;ng Vi&#x1EC7;t</p></div>
+           <div class="lang-switch"><span class="lang active" id="lang-vi">VI</span><span class="lang" id="lang-en">EN</span></div>
          </div>
       </div>
     </section>
@@ -512,7 +277,7 @@
     </a>
   </nav>
 
-  <!-- ── Floating Voice Order Button ── -->
+  <!-- Floating Voice Button -->
   <button id="voice-order-btn" onclick="openVoiceModal()" title="Order by voice">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
@@ -522,14 +287,13 @@
     </svg>
   </button>
 
-  <!-- ── Voice Order Modal ── -->
+  <!-- Voice Order Modal -->
   <div id="voice-modal">
     <div id="voice-modal-content">
       <div class="voice-modal-header">
         <h3>🎙️ Voice Order</h3>
         <button class="voice-close-btn" onclick="closeVoiceModal()">&#x2715;</button>
       </div>
-
       <div class="voice-status">
         <div class="voice-orb" id="voice-orb">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -542,51 +306,32 @@
         <p class="voice-status-text" id="voice-status-text">Tap below to start</p>
         <p class="voice-transcript" id="voice-transcript">The AI agent will ask for your pickup &amp; drop-off, then open checkout.</p>
       </div>
-
       <button class="voice-start-btn" id="voice-start-btn" onclick="startVoiceSession()">🎙️ Start Voice Order</button>
       <button class="voice-stop-btn" id="voice-stop-btn" onclick="stopVoiceSession()" style="display:none">Stop</button>
     </div>
   </div>
 
-  <!-- Package Size Selection Modal -->
+  <!-- Package Size Modal -->
   <div id="package-modal" class="modal">
     <div class="modal-content">
       <h3 class="modal-title" data-i18n="selectPackageSize">Select Package Size</h3>
       <div class="pkg-options">
         <div class="pkg-option" onclick="selectPackage(this)">
           <div class="pkg-icon">&#128230;</div>
-          <div class="pkg-info">
-            <strong data-i18n="small">Small</strong>
-            <p data-i18n="upTo1kg">Up to 1 kg</p>
-          </div>
-          <div class="pkg-price">
-            <strong>45,000&#8363;</strong>
-            <p>~8 min</p>
-          </div>
+          <div class="pkg-info"><strong data-i18n="small">Small</strong><p data-i18n="upTo1kg">Up to 1 kg</p></div>
+          <div class="pkg-price"><strong>45,000&#8363;</strong><p>~8 min</p></div>
           <div class="radio-circle"></div>
         </div>
         <div class="pkg-option" onclick="selectPackage(this)">
           <div class="pkg-icon">&#128717;</div>
-          <div class="pkg-info">
-            <strong data-i18n="medium">Medium</strong>
-            <p data-i18n="upTo3kg">Up to 3 kg</p>
-          </div>
-          <div class="pkg-price">
-            <strong>75,000&#8363;</strong>
-            <p>~10 min</p>
-          </div>
+          <div class="pkg-info"><strong data-i18n="medium">Medium</strong><p data-i18n="upTo3kg">Up to 3 kg</p></div>
+          <div class="pkg-price"><strong>75,000&#8363;</strong><p>~10 min</p></div>
           <div class="radio-circle"></div>
         </div>
         <div class="pkg-option" onclick="selectPackage(this)">
           <div class="pkg-icon">&#128235;</div>
-          <div class="pkg-info">
-            <strong data-i18n="large">Large</strong>
-            <p data-i18n="upTo5kg">Up to 5 kg</p>
-          </div>
-          <div class="pkg-price">
-            <strong>120,000&#8363;</strong>
-            <p>~14 min</p>
-          </div>
+          <div class="pkg-info"><strong data-i18n="large">Large</strong><p data-i18n="upTo5kg">Up to 5 kg</p></div>
+          <div class="pkg-price"><strong>120,000&#8363;</strong><p>~14 min</p></div>
           <div class="radio-circle"></div>
         </div>
       </div>
@@ -597,33 +342,21 @@
     </div>
   </div>
 
-  <!-- Delivery Speed Selection Modal -->
+  <!-- Delivery Speed Modal -->
   <div id="speed-modal" class="modal">
     <div class="modal-content">
       <h3 class="modal-title" data-i18n="selectDeliverySpeed">Select Delivery Speed</h3>
       <div class="pkg-options">
         <div class="pkg-option" onclick="selectSpeed(this)">
           <div class="pkg-icon">&#128640;</div>
-          <div class="pkg-info">
-            <strong>UrgentWing</strong>
-            <p data-i18n="urgentDesc">Immediate priority dispatch</p>
-          </div>
-          <div class="pkg-price">
-            <strong>+65,000&#8363;</strong>
-            <p>ASAP</p>
-          </div>
+          <div class="pkg-info"><strong>UrgentWing</strong><p data-i18n="urgentDesc">Immediate priority dispatch</p></div>
+          <div class="pkg-price"><strong>+65,000&#8363;</strong><p>ASAP</p></div>
           <div class="radio-circle"></div>
         </div>
         <div class="pkg-option" onclick="selectSpeed(this)">
           <div class="pkg-icon">&#128338;</div>
-          <div class="pkg-info">
-            <strong data-i18n="standard">Standard</strong>
-            <p data-i18n="standardDesc">Flexible same-day window</p>
-          </div>
-          <div class="pkg-price">
-            <strong data-i18n="free">Free</strong>
-            <p data-i18n="today">Today</p>
-          </div>
+          <div class="pkg-info"><strong data-i18n="standard">Standard</strong><p data-i18n="standardDesc">Flexible same-day window</p></div>
+          <div class="pkg-price"><strong data-i18n="free">Free</strong><p data-i18n="today">Today</p></div>
           <div class="radio-circle"></div>
         </div>
       </div>
@@ -640,10 +373,8 @@
       <h3 class="modal-title" data-i18n="rateModalTitle">Rate Your Delivery</h3>
       <p class="rating-sub" data-i18n="rateModalSub">How was your experience with drone SL-2847?</p>
       <div class="star-rating" id="star-rating">
-        <span class="star" data-value="1">&#9733;</span>
-        <span class="star" data-value="2">&#9733;</span>
-        <span class="star" data-value="3">&#9733;</span>
-        <span class="star" data-value="4">&#9733;</span>
+        <span class="star" data-value="1">&#9733;</span><span class="star" data-value="2">&#9733;</span>
+        <span class="star" data-value="3">&#9733;</span><span class="star" data-value="4">&#9733;</span>
         <span class="star" data-value="5">&#9733;</span>
       </div>
       <p class="rating-label" id="rating-label" data-i18n="rateSelectPrompt">Tap a star to rate</p>
@@ -654,156 +385,251 @@
     </div>
   </div>
 
-  <!-- ElevenLabs widget script (CDN) -->
-  <script src="https://elevenlabs.io/convai-widget/index.js" async></script>
-
   <script src="script.js"></script>
 
   <script>
-    // ── Voice Order Feature ──────────────────────────────────────────────────
+  // ── ElevenLabs Voice Order — WebSocket implementation ──────────────────────
+  // No widget, no hacks. Direct WebSocket to ElevenLabs Conversational AI API.
 
-    const AGENT_ID = 'agent_4501kq2g63p3ee9aefab4ngye1dq';
+  const AGENT_ID = 'agent_4501kq2g63p3ee9aefab4ngye1dq';
 
-    let voiceConversation = null;
-    let voiceActive = false;
+  let ws = null;
+  let mediaStream = null;
+  let audioContext = null;
+  let processorNode = null;
+  let audioQueue = [];
+  let isPlayingAudio = false;
 
-    function openVoiceModal() {
-      document.getElementById('voice-modal').classList.add('show');
+  // ── UI helpers ──────────────────────────────────────────────────────────────
+
+  function openVoiceModal() {
+    document.getElementById('voice-modal').classList.add('show');
+  }
+
+  function closeVoiceModal() {
+    document.getElementById('voice-modal').classList.remove('show');
+    stopVoiceSession();
+  }
+
+  function setVoiceUI(state) {
+    const orb      = document.getElementById('voice-orb');
+    const status   = document.getElementById('voice-status-text');
+    const startBtn = document.getElementById('voice-start-btn');
+    const stopBtn  = document.getElementById('voice-stop-btn');
+    const floatBtn = document.getElementById('voice-order-btn');
+
+    orb.className = 'voice-orb';
+    floatBtn.classList.remove('listening');
+
+    if (state === 'connecting') {
+      status.textContent = 'Connecting...';
+      startBtn.style.display = 'none';
+      stopBtn.style.display = 'block';
+    } else if (state === 'listening') {
+      orb.classList.add('active');
+      status.textContent = 'Listening...';
+      startBtn.style.display = 'none';
+      stopBtn.style.display = 'block';
+      floatBtn.classList.add('listening');
+    } else if (state === 'speaking') {
+      orb.classList.add('speaking');
+      status.textContent = 'Agent speaking...';
+      startBtn.style.display = 'none';
+      stopBtn.style.display = 'block';
+    } else {
+      status.textContent = 'Tap below to start';
+      startBtn.style.display = 'block';
+      stopBtn.style.display = 'none';
     }
+  }
 
-    function closeVoiceModal() {
-      document.getElementById('voice-modal').classList.remove('show');
-      if (voiceActive) stopVoiceSession();
+  function setTranscript(text) {
+    document.getElementById('voice-transcript').textContent = text;
+  }
+
+  // ── Order auto-fill ─────────────────────────────────────────────────────────
+
+  function tryFillOrder(msg) {
+    const lower = msg.toLowerCase();
+
+    const pickupMatch = msg.match(/(?:đón|pickup|lấy hàng tại|from)[:\s]+([^,.\n]+)/i);
+    if (pickupMatch) document.getElementById('pickup-input').value = pickupMatch[1].trim();
+
+    const dropoffMatch = msg.match(/(?:giao đến|drop.?off|deliver(?:y)? to|destination)[:\s]+([^,.\n]+)/i);
+    if (dropoffMatch) document.getElementById('dropoff-input').value = dropoffMatch[1].trim();
+
+    const confirmWords = ['confirmed', 'xác nhận', 'đã xác nhận', 'order confirmed', 'đặt hàng thành công', 'proceeding to checkout'];
+    if (confirmWords.some(k => lower.includes(k))) {
+      stopVoiceSession();
+      closeVoiceModal();
+      switchTab('order');
+      setTimeout(() => openPackageModal(), 400);
     }
+  }
 
-    function setVoiceUI(state) {
-      // state: 'idle' | 'listening' | 'speaking' | 'done'
-      const orb    = document.getElementById('voice-orb');
-      const status = document.getElementById('voice-status-text');
-      const startBtn = document.getElementById('voice-start-btn');
-      const stopBtn  = document.getElementById('voice-stop-btn');
-      const floatBtn = document.getElementById('voice-order-btn');
+  // ── Audio playback (PCM → Web Audio) ───────────────────────────────────────
 
-      orb.className = 'voice-orb';
+  async function playAudioChunk(base64Audio) {
+    const raw = atob(base64Audio);
+    const bytes = new Uint8Array(raw.length);
+    for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
 
-      if (state === 'listening') {
-        orb.classList.add('active');
-        status.textContent = 'Listening...';
-        startBtn.style.display = 'none';
-        stopBtn.style.display  = 'block';
-        floatBtn.classList.add('listening');
-      } else if (state === 'speaking') {
-        orb.classList.add('speaking');
-        status.textContent = 'Agent speaking...';
-        startBtn.style.display = 'none';
-        stopBtn.style.display  = 'block';
-        floatBtn.classList.add('listening');
-      } else {
-        status.textContent = 'Tap below to start';
-        startBtn.style.display = 'block';
-        stopBtn.style.display  = 'none';
-        floatBtn.classList.remove('listening');
+    // ElevenLabs sends 16-bit PCM at 16000 Hz mono by default over WebSocket
+    const samples = new Int16Array(bytes.buffer);
+    const float32 = new Float32Array(samples.length);
+    for (let i = 0; i < samples.length; i++) float32[i] = samples[i] / 32768;
+
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    const buffer = audioContext.createBuffer(1, float32.length, 16000);
+    buffer.copyToChannel(float32, 0);
+
+    audioQueue.push(buffer);
+    if (!isPlayingAudio) drainAudioQueue();
+  }
+
+  function drainAudioQueue() {
+    if (audioQueue.length === 0) { isPlayingAudio = false; return; }
+    isPlayingAudio = true;
+    const buffer = audioQueue.shift();
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+    source.onended = drainAudioQueue;
+    source.start();
+  }
+
+  // ── Mic capture → base64 PCM chunks ────────────────────────────────────────
+
+  async function startMicCapture() {
+    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true } });
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+
+    const source = audioContext.createMediaStreamSource(mediaStream);
+
+    // ScriptProcessor for broad compatibility (including Android WebView)
+    processorNode = audioContext.createScriptProcessor(4096, 1, 1);
+    processorNode.onaudioprocess = (e) => {
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      const float32 = e.inputBuffer.getChannelData(0);
+      const int16 = new Int16Array(float32.length);
+      for (let i = 0; i < float32.length; i++) {
+        const s = Math.max(-1, Math.min(1, float32[i]));
+        int16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
       }
-    }
+      // Convert to base64
+      const bytes = new Uint8Array(int16.buffer);
+      let bin = '';
+      for (let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
+      const b64 = btoa(bin);
+      ws.send(JSON.stringify({ user_audio_chunk: b64 }));
+    };
 
-    function setTranscript(text) {
-      document.getElementById('voice-transcript').textContent = text;
-    }
+    source.connect(processorNode);
+    processorNode.connect(audioContext.destination);
+  }
 
-    // Parse pickup/dropoff from agent messages and fill inputs
-    function tryFillOrderFromMessage(msg) {
-      const lower = msg.toLowerCase();
+  function stopMicCapture() {
+    if (processorNode) { processorNode.disconnect(); processorNode = null; }
+    if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
+  }
 
-      // Look for pickup keywords
-      const pickupMatch = msg.match(/(?:đón|pickup|lấy hàng tại|from)[:\s]+([^,.\n]+)/i);
-      if (pickupMatch) {
-        document.getElementById('pickup-input').value = pickupMatch[1].trim();
-      }
+  // ── WebSocket session ───────────────────────────────────────────────────────
 
-      // Look for dropoff keywords
-      const dropoffMatch = msg.match(/(?:giao đến|drop.?off|deliver(?:y)? to|destination)[:\s]+([^,.\n]+)/i);
-      if (dropoffMatch) {
-        document.getElementById('dropoff-input').value = dropoffMatch[1].trim();
-      }
+  async function startVoiceSession() {
+    setVoiceUI('connecting');
+    setTranscript('');
 
-      // If agent signals order is confirmed, navigate to order tab and open checkout
-      const confirmKeywords = ['confirmed', 'xác nhận', 'đã xác nhận', 'your order is placed', 'order confirmed', 'đặt hàng thành công'];
-      if (confirmKeywords.some(k => lower.includes(k))) {
-        stopVoiceSession();
-        closeVoiceModal();
-        switchTab('order');
-        setTimeout(() => openPackageModal(), 400);
-      }
-    }
-
-    async function startVoiceSession() {
-      // Request mic permission first
-      try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-      } catch (e) {
-        setTranscript('Microphone access denied. Please allow mic permission and try again.');
-        return;
-      }
-
-      setVoiceUI('listening');
-      setTranscript('');
-      voiceActive = true;
-
-      // Use ElevenLabs widget element as the conversation engine
-      // We create a hidden widget and control it via events
-      let widget = document.getElementById('el-voice-widget');
-      if (!widget) {
-        widget = document.createElement('elevenlabs-convai');
-        widget.setAttribute('agent-id', AGENT_ID);
-        widget.id = 'el-voice-widget';
-        widget.style.cssText = 'position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
-        document.body.appendChild(widget);
-      }
-
-      // Listen for widget events
-      widget.addEventListener('elevenlabs-convai:call-started', () => {
-        setVoiceUI('listening');
-      });
-
-      widget.addEventListener('elevenlabs-convai:message', (e) => {
-        const detail = e.detail || {};
-        const text = detail.text || detail.message || '';
-        if (text) {
-          setTranscript(text);
-          tryFillOrderFromMessage(text);
-        }
-        // Toggle orb based on who's speaking
-        if (detail.source === 'agent') {
-          setVoiceUI('speaking');
-        } else {
-          setVoiceUI('listening');
-        }
-      });
-
-      widget.addEventListener('elevenlabs-convai:call-ended', () => {
-        voiceActive = false;
-        setVoiceUI('idle');
-      });
-
-      // Trigger the widget's call button programmatically
-      // The widget renders a button internally — we click it after it's ready
-      setTimeout(() => {
-        const shadowBtn = widget.shadowRoot && widget.shadowRoot.querySelector('button');
-        if (shadowBtn) shadowBtn.click();
-      }, 800);
-    }
-
-    function stopVoiceSession() {
-      voiceActive = false;
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (e) {
+      setTranscript('Microphone access denied. Please allow mic permission.');
       setVoiceUI('idle');
-      setTranscript('Session ended.');
-
-      const widget = document.getElementById('el-voice-widget');
-      if (widget) {
-        const shadowBtn = widget.shadowRoot && widget.shadowRoot.querySelector('button');
-        if (shadowBtn) shadowBtn.click(); // toggles off
-      }
+      return;
     }
+
+    const wsUrl = `wss://api.elevenlabs.io/v1/convai/conversation?agent_id=${AGENT_ID}`;
+    ws = new WebSocket(wsUrl);
+
+    ws.onopen = async () => {
+      // Send initiation handshake
+      ws.send(JSON.stringify({ type: 'conversation_initiation_client_data' }));
+      await startMicCapture();
+      setVoiceUI('listening');
+    };
+
+    ws.onmessage = (event) => {
+      let data;
+      try { data = JSON.parse(event.data); } catch { return; }
+
+      switch (data.type) {
+        case 'conversation_initiation_metadata':
+          // Connection confirmed
+          break;
+
+        case 'user_transcript':
+          setTranscript('You: ' + (data.user_transcription_event?.user_transcript || ''));
+          setVoiceUI('listening');
+          break;
+
+        case 'agent_response':
+          const agentText = data.agent_response_event?.agent_response || '';
+          setTranscript('Agent: ' + agentText);
+          setVoiceUI('speaking');
+          tryFillOrder(agentText);
+          break;
+
+        case 'audio':
+          if (data.audio_event?.audio_base_64) {
+            playAudioChunk(data.audio_event.audio_base_64);
+          }
+          break;
+
+        case 'ping':
+          // Must respond to pings to keep connection alive
+          ws.send(JSON.stringify({
+            type: 'pong',
+            event_id: data.ping_event?.event_id
+          }));
+          break;
+
+        case 'interruption':
+          // Agent was interrupted — clear audio queue
+          audioQueue = [];
+          isPlayingAudio = false;
+          setVoiceUI('listening');
+          break;
+
+        case 'agent_response_correction':
+          // Agent corrected itself
+          const corrected = data.agent_response_correction_event?.corrected_agent_response || '';
+          if (corrected) setTranscript('Agent: ' + corrected);
+          break;
+      }
+    };
+
+    ws.onerror = (err) => {
+      console.error('WS error', err);
+      setTranscript('Connection error. Please try again.');
+      stopVoiceSession();
+    };
+
+    ws.onclose = () => {
+      stopMicCapture();
+      setVoiceUI('idle');
+    };
+  }
+
+  function stopVoiceSession() {
+    stopMicCapture();
+    audioQueue = [];
+    isPlayingAudio = false;
+    if (ws) {
+      ws.close();
+      ws = null;
+    }
+    setVoiceUI('idle');
+  }
   </script>
 </body>
 </html>
