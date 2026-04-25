@@ -65,6 +65,153 @@
       color: #aaa;
       font-size: 14px;
     }
+
+    /* ── Voice Order Button ── */
+    #voice-order-btn {
+      position: fixed;
+      right: 20px;
+      bottom: calc(var(--nav-height) + 16px);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent-red);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      box-shadow: 0 4px 20px rgba(242, 35, 56, 0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #voice-order-btn:active {
+      transform: scale(0.92);
+    }
+    #voice-order-btn.listening {
+      animation: pulse-ring 1.4s ease-out infinite;
+      box-shadow: 0 0 0 0 rgba(242, 35, 56, 0.5);
+    }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0   rgba(242, 35, 56, 0.5); }
+      70%  { box-shadow: 0 0 0 16px rgba(242, 35, 56, 0);   }
+      100% { box-shadow: 0 0 0 0   rgba(242, 35, 56, 0);    }
+    }
+    #voice-order-btn svg { pointer-events: none; }
+
+    /* ── Voice Modal Overlay ── */
+    #voice-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 300;
+      align-items: flex-end;
+    }
+    #voice-modal.show { display: flex; }
+
+    #voice-modal-content {
+      background: var(--bg-color);
+      width: 100%;
+      border-radius: 24px 24px 0 0;
+      padding: 28px 24px 36px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .voice-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .voice-modal-header h3 { color: #fff; font-size: 18px; }
+    .voice-close-btn {
+      background: rgba(255,255,255,0.08);
+      border: none;
+      color: #aaa;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .voice-status {
+      text-align: center;
+      padding: 20px 0 8px;
+    }
+    .voice-orb {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: rgba(242, 35, 56, 0.12);
+      border: 2px solid rgba(242, 35, 56, 0.3);
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s;
+    }
+    .voice-orb.active {
+      background: rgba(242, 35, 56, 0.2);
+      border-color: var(--accent-red);
+      animation: orb-pulse 1.2s ease-in-out infinite;
+    }
+    .voice-orb.speaking {
+      background: rgba(46, 204, 113, 0.15);
+      border-color: var(--accent-green);
+      animation: orb-pulse-green 1.2s ease-in-out infinite;
+    }
+    @keyframes orb-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(242,35,56,0.3); }
+      50%       { box-shadow: 0 0 0 14px rgba(242,35,56,0); }
+    }
+    @keyframes orb-pulse-green {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(46,204,113,0.3); }
+      50%       { box-shadow: 0 0 0 14px rgba(46,204,113,0); }
+    }
+
+    .voice-status-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .voice-transcript {
+      font-size: 15px;
+      color: #fff;
+      min-height: 44px;
+      text-align: center;
+      padding: 0 8px;
+      line-height: 1.5;
+    }
+
+    .voice-start-btn {
+      width: 100%;
+      margin-top: 24px;
+      background: var(--accent-red);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(242,35,56,0.3);
+      transition: opacity 0.2s;
+    }
+    .voice-start-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .voice-stop-btn {
+      width: 100%;
+      margin-top: 12px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body class="app-body">
@@ -365,6 +512,42 @@
     </a>
   </nav>
 
+  <!-- ── Floating Voice Order Button ── -->
+  <button id="voice-order-btn" onclick="openVoiceModal()" title="Order by voice">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      <line x1="12" y1="19" x2="12" y2="23"/>
+      <line x1="8" y1="23" x2="16" y2="23"/>
+    </svg>
+  </button>
+
+  <!-- ── Voice Order Modal ── -->
+  <div id="voice-modal">
+    <div id="voice-modal-content">
+      <div class="voice-modal-header">
+        <h3>🎙️ Voice Order</h3>
+        <button class="voice-close-btn" onclick="closeVoiceModal()">&#x2715;</button>
+      </div>
+
+      <div class="voice-status">
+        <div class="voice-orb" id="voice-orb">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/>
+            <line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </div>
+        <p class="voice-status-text" id="voice-status-text">Tap below to start</p>
+        <p class="voice-transcript" id="voice-transcript">The AI agent will ask for your pickup &amp; drop-off, then open checkout.</p>
+      </div>
+
+      <button class="voice-start-btn" id="voice-start-btn" onclick="startVoiceSession()">🎙️ Start Voice Order</button>
+      <button class="voice-stop-btn" id="voice-stop-btn" onclick="stopVoiceSession()" style="display:none">Stop</button>
+    </div>
+  </div>
+
   <!-- Package Size Selection Modal -->
   <div id="package-modal" class="modal">
     <div class="modal-content">
@@ -471,6 +654,156 @@
     </div>
   </div>
 
+  <!-- ElevenLabs widget script (CDN) -->
+  <script src="https://elevenlabs.io/convai-widget/index.js" async></script>
+
   <script src="script.js"></script>
+
+  <script>
+    // ── Voice Order Feature ──────────────────────────────────────────────────
+
+    const AGENT_ID = 'agent_4501kq2g63p3ee9aefab4ngye1dq';
+
+    let voiceConversation = null;
+    let voiceActive = false;
+
+    function openVoiceModal() {
+      document.getElementById('voice-modal').classList.add('show');
+    }
+
+    function closeVoiceModal() {
+      document.getElementById('voice-modal').classList.remove('show');
+      if (voiceActive) stopVoiceSession();
+    }
+
+    function setVoiceUI(state) {
+      // state: 'idle' | 'listening' | 'speaking' | 'done'
+      const orb    = document.getElementById('voice-orb');
+      const status = document.getElementById('voice-status-text');
+      const startBtn = document.getElementById('voice-start-btn');
+      const stopBtn  = document.getElementById('voice-stop-btn');
+      const floatBtn = document.getElementById('voice-order-btn');
+
+      orb.className = 'voice-orb';
+
+      if (state === 'listening') {
+        orb.classList.add('active');
+        status.textContent = 'Listening...';
+        startBtn.style.display = 'none';
+        stopBtn.style.display  = 'block';
+        floatBtn.classList.add('listening');
+      } else if (state === 'speaking') {
+        orb.classList.add('speaking');
+        status.textContent = 'Agent speaking...';
+        startBtn.style.display = 'none';
+        stopBtn.style.display  = 'block';
+        floatBtn.classList.add('listening');
+      } else {
+        status.textContent = 'Tap below to start';
+        startBtn.style.display = 'block';
+        stopBtn.style.display  = 'none';
+        floatBtn.classList.remove('listening');
+      }
+    }
+
+    function setTranscript(text) {
+      document.getElementById('voice-transcript').textContent = text;
+    }
+
+    // Parse pickup/dropoff from agent messages and fill inputs
+    function tryFillOrderFromMessage(msg) {
+      const lower = msg.toLowerCase();
+
+      // Look for pickup keywords
+      const pickupMatch = msg.match(/(?:đón|pickup|lấy hàng tại|from)[:\s]+([^,.\n]+)/i);
+      if (pickupMatch) {
+        document.getElementById('pickup-input').value = pickupMatch[1].trim();
+      }
+
+      // Look for dropoff keywords
+      const dropoffMatch = msg.match(/(?:giao đến|drop.?off|deliver(?:y)? to|destination)[:\s]+([^,.\n]+)/i);
+      if (dropoffMatch) {
+        document.getElementById('dropoff-input').value = dropoffMatch[1].trim();
+      }
+
+      // If agent signals order is confirmed, navigate to order tab and open checkout
+      const confirmKeywords = ['confirmed', 'xác nhận', 'đã xác nhận', 'your order is placed', 'order confirmed', 'đặt hàng thành công'];
+      if (confirmKeywords.some(k => lower.includes(k))) {
+        stopVoiceSession();
+        closeVoiceModal();
+        switchTab('order');
+        setTimeout(() => openPackageModal(), 400);
+      }
+    }
+
+    async function startVoiceSession() {
+      // Request mic permission first
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (e) {
+        setTranscript('Microphone access denied. Please allow mic permission and try again.');
+        return;
+      }
+
+      setVoiceUI('listening');
+      setTranscript('');
+      voiceActive = true;
+
+      // Use ElevenLabs widget element as the conversation engine
+      // We create a hidden widget and control it via events
+      let widget = document.getElementById('el-voice-widget');
+      if (!widget) {
+        widget = document.createElement('elevenlabs-convai');
+        widget.setAttribute('agent-id', AGENT_ID);
+        widget.id = 'el-voice-widget';
+        widget.style.cssText = 'position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+        document.body.appendChild(widget);
+      }
+
+      // Listen for widget events
+      widget.addEventListener('elevenlabs-convai:call-started', () => {
+        setVoiceUI('listening');
+      });
+
+      widget.addEventListener('elevenlabs-convai:message', (e) => {
+        const detail = e.detail || {};
+        const text = detail.text || detail.message || '';
+        if (text) {
+          setTranscript(text);
+          tryFillOrderFromMessage(text);
+        }
+        // Toggle orb based on who's speaking
+        if (detail.source === 'agent') {
+          setVoiceUI('speaking');
+        } else {
+          setVoiceUI('listening');
+        }
+      });
+
+      widget.addEventListener('elevenlabs-convai:call-ended', () => {
+        voiceActive = false;
+        setVoiceUI('idle');
+      });
+
+      // Trigger the widget's call button programmatically
+      // The widget renders a button internally — we click it after it's ready
+      setTimeout(() => {
+        const shadowBtn = widget.shadowRoot && widget.shadowRoot.querySelector('button');
+        if (shadowBtn) shadowBtn.click();
+      }, 800);
+    }
+
+    function stopVoiceSession() {
+      voiceActive = false;
+      setVoiceUI('idle');
+      setTranscript('Session ended.');
+
+      const widget = document.getElementById('el-voice-widget');
+      if (widget) {
+        const shadowBtn = widget.shadowRoot && widget.shadowRoot.querySelector('button');
+        if (shadowBtn) shadowBtn.click(); // toggles off
+      }
+    }
+  </script>
 </body>
 </html>
