@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <style>
-    /* Star Rating Modal */
     .star-rating { display: flex; justify-content: center; gap: 10px; margin: 20px 0 8px; }
     .star { font-size: 40px; color: #444; cursor: pointer; transition: color 0.15s, transform 0.15s; line-height: 1; user-select: none; }
     .star.active { color: #FFD700; transform: scale(1.15); }
@@ -20,104 +19,29 @@
     .rating-thanks .thanks-icon { font-size: 48px; display: block; margin-bottom: 12px; }
     .rating-thanks h3 { color: #fff; margin-bottom: 8px; }
     .rating-thanks p { color: #aaa; font-size: 14px; }
-
-    /* ── Voice Order Button ── */
-    #voice-order-btn {
-      position: fixed;
-      right: 20px;
-      bottom: calc(var(--nav-height) + 16px);
-      width: 56px; height: 56px;
-      border-radius: 50%;
-      background: var(--accent-red);
-      border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 60;
-      box-shadow: 0 4px 20px rgba(242,35,56,0.45);
-      transition: transform 0.2s;
-    }
+    #voice-order-btn { position: fixed; right: 20px; bottom: calc(var(--nav-height) + 16px); width: 56px; height: 56px; border-radius: 50%; background: var(--accent-red); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 60; box-shadow: 0 4px 20px rgba(242,35,56,0.45); transition: transform 0.2s; }
     #voice-order-btn:active { transform: scale(0.92); }
     #voice-order-btn.listening { animation: pulse-ring 1.4s ease-out infinite; }
-    @keyframes pulse-ring {
-      0%  { box-shadow: 0 0 0 0   rgba(242,35,56,0.5); }
-      70% { box-shadow: 0 0 0 16px rgba(242,35,56,0); }
-      100%{ box-shadow: 0 0 0 0   rgba(242,35,56,0); }
-    }
+    @keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(242,35,56,0.5); } 70% { box-shadow: 0 0 0 16px rgba(242,35,56,0); } 100% { box-shadow: 0 0 0 0 rgba(242,35,56,0); } }
     #voice-order-btn svg { pointer-events: none; }
-
-    /* ── Voice Modal ── */
-    #voice-modal {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
-      z-index: 300; align-items: flex-end;
-    }
+    #voice-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 300; align-items: flex-end; }
     #voice-modal.show { display: flex; }
-    #voice-modal-content {
-      background: var(--bg-color); width: 100%;
-      border-radius: 24px 24px 0 0;
-      padding: 28px 24px 36px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      animation: slideUp 0.3s ease-out;
-    }
+    #voice-modal-content { background: var(--bg-color); width: 100%; border-radius: 24px 24px 0 0; padding: 28px 24px 36px; border-top: 1px solid rgba(255,255,255,0.08); animation: slideUp 0.3s ease-out; }
     .voice-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .voice-modal-header h3 { color: #fff; font-size: 18px; }
-    .voice-close-btn {
-      background: rgba(255,255,255,0.08); border: none; color: #aaa;
-      width: 32px; height: 32px; border-radius: 50%; font-size: 18px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-    }
+    .voice-close-btn { background: rgba(255,255,255,0.08); border: none; color: #aaa; width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .voice-status { text-align: center; padding: 20px 0 8px; }
-    .voice-orb {
-      width: 80px; height: 80px; border-radius: 50%;
-      background: rgba(242,35,56,0.12);
-      border: 2px solid rgba(242,35,56,0.3);
-      margin: 0 auto 16px;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.3s;
-    }
-    .voice-orb.active {
-      background: rgba(242,35,56,0.2); border-color: var(--accent-red);
-      animation: orb-pulse 1.2s ease-in-out infinite;
-    }
-    .voice-orb.speaking {
-      background: rgba(46,204,113,0.15); border-color: var(--accent-green);
-      animation: orb-pulse-green 1.2s ease-in-out infinite;
-    }
-    @keyframes orb-pulse {
-      0%,100%{ box-shadow: 0 0 0 0 rgba(242,35,56,0.3); }
-      50%    { box-shadow: 0 0 0 14px rgba(242,35,56,0); }
-    }
-    @keyframes orb-pulse-green {
-      0%,100%{ box-shadow: 0 0 0 0 rgba(46,204,113,0.3); }
-      50%    { box-shadow: 0 0 0 14px rgba(46,204,113,0); }
-    }
+    .voice-orb { width: 80px; height: 80px; border-radius: 50%; background: rgba(242,35,56,0.12); border: 2px solid rgba(242,35,56,0.3); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+    .voice-orb.active { background: rgba(242,35,56,0.2); border-color: var(--accent-red); animation: orb-pulse 1.2s ease-in-out infinite; }
+    .voice-orb.speaking { background: rgba(46,204,113,0.15); border-color: var(--accent-green); animation: orb-pulse-green 1.2s ease-in-out infinite; }
+    @keyframes orb-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(242,35,56,0.3); } 50% { box-shadow: 0 0 0 14px rgba(242,35,56,0); } }
+    @keyframes orb-pulse-green { 0%,100% { box-shadow: 0 0 0 0 rgba(46,204,113,0.3); } 50% { box-shadow: 0 0 0 14px rgba(46,204,113,0); } }
     .voice-status-text { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }
-    .voice-transcript {
-      font-size: 15px; color: #fff; min-height: 44px;
-      text-align: center; padding: 0 8px; line-height: 1.5;
-    }
-    .voice-start-btn {
-      width: 100%; margin-top: 24px;
-      background: var(--accent-red); color: #fff; border: none;
-      border-radius: 14px; padding: 16px; font-size: 16px; font-weight: 600;
-      font-family: inherit; cursor: pointer;
-      box-shadow: 0 4px 20px rgba(242,35,56,0.3);
-    }
+    .voice-transcript { font-size: 15px; color: #fff; min-height: 44px; text-align: center; padding: 0 8px; line-height: 1.5; }
+    .voice-start-btn { width: 100%; margin-top: 24px; background: var(--accent-red); color: #fff; border: none; border-radius: 14px; padding: 16px; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer; box-shadow: 0 4px 20px rgba(242,35,56,0.3); }
     .voice-start-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .voice-stop-btn {
-      width: 100%; margin-top: 12px; background: transparent;
-      color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 600;
-      font-family: inherit; cursor: pointer;
-    }
-
-    /* ── Login Screen ── */
-    #login-screen {
-      position: fixed; inset: 0; z-index: 500;
-      background: var(--bg-color, #0d0d0d);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 2rem 1.5rem;
-    }
+    .voice-stop-btn { width: 100%; margin-top: 12px; background: transparent; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
+    #login-screen { position: fixed; inset: 0; z-index: 500; background: var(--bg-color, #0d0d0d); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem; }
     #login-screen.hidden { display: none; }
     .login-logo { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-bottom: 2.5rem; }
     .login-logo-icon { width: 64px; height: 64px; background: var(--accent-red, #f22338); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
@@ -144,7 +68,6 @@
 </head>
 <body class="app-body">
 
-  <!-- Login Screen -->
   <div id="login-screen">
     <div class="login-logo">
       <div class="login-logo-icon">✦</div>
@@ -161,57 +84,32 @@
         </svg>
         Continue with Google
       </button>
-
       <div class="login-divider"><span>or</span></div>
-
       <div class="login-tabs">
         <button class="login-tab active" id="tabLogin">Login</button>
         <button class="login-tab" id="tabRegister">Register</button>
       </div>
-
       <div id="loginForm">
-        <div class="login-field">
-          <label>Email</label>
-          <input type="email" id="loginEmail" placeholder="you@example.com" />
-        </div>
-        <div class="login-field">
-          <label>Password</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" />
-        </div>
+        <div class="login-field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com" /></div>
+        <div class="login-field"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" /></div>
         <button class="login-btn" id="loginBtn">Sign in</button>
       </div>
-
       <div id="registerForm" style="display:none">
-        <div class="login-field">
-          <label>Full name</label>
-          <input type="text" id="regName" placeholder="Nguyen Van A" />
-        </div>
-        <div class="login-field">
-          <label>Email</label>
-          <input type="email" id="regEmail" placeholder="you@example.com" />
-        </div>
-        <div class="login-field">
-          <label>Password</label>
-          <input type="password" id="regPassword" placeholder="At least 6 characters" />
-        </div>
+        <div class="login-field"><label>Full name</label><input type="text" id="regName" placeholder="Nguyen Van A" /></div>
+        <div class="login-field"><label>Email</label><input type="email" id="regEmail" placeholder="you@example.com" /></div>
+        <div class="login-field"><label>Password</label><input type="password" id="regPassword" placeholder="At least 6 characters" /></div>
         <button class="login-btn" id="registerBtn">Create account</button>
       </div>
-
       <p class="login-msg" id="loginMsg"></p>
     </div>
   </div>
 
   <main id="app-content" style="display:none">
-
-    <!-- Home Tab -->
     <section id="tab-home" class="tab-view active">
       <div class="app-card drone-status-card">
          <div class="drone-header">
            <div class="drone-icon-box"></div>
-           <div class="drone-header-info">
-             <h3>Drone SL-2847</h3>
-             <p data-i18n="enRoute">En route &middot; 2.4 km away</p>
-           </div>
+           <div class="drone-header-info"><h3>Drone SL-2847</h3><p data-i18n="enRoute">En route &middot; 2.4 km away</p></div>
            <span class="status-badge green" data-i18n="inFlight">IN FLIGHT</span>
          </div>
          <div class="progress-container">
@@ -227,18 +125,9 @@
          <button class="btn btn-outline" onclick="switchTab('track')" data-i18n="viewTracking">VIEW FULL TRACKING &rarr;</button>
       </div>
       <div class="quick-actions">
-         <div class="action-card new-order" onclick="switchTab('order')">
-           <div class="action-icon icon-red">+</div>
-           <div class="action-text"><h4 data-i18n="newOrder">New Order</h4><p data-i18n="scheduleDelivery">Schedule delivery</p></div>
-         </div>
-         <div class="action-card">
-           <div class="action-icon icon-gray"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-           <div class="action-text"><h4 data-i18n="history">History</h4><p data-i18n="deliveriesCount">12 deliveries</p></div>
-         </div>
-         <div class="action-card">
-           <div class="action-icon icon-gray"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
-           <div class="action-text"><h4>Skypass</h4><p data-i18n="goldTier">Gold tier</p></div>
-         </div>
+         <div class="action-card new-order" onclick="switchTab('order')"><div class="action-icon icon-red">+</div><div class="action-text"><h4 data-i18n="newOrder">New Order</h4><p data-i18n="scheduleDelivery">Schedule delivery</p></div></div>
+         <div class="action-card"><div class="action-icon icon-gray"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div><div class="action-text"><h4 data-i18n="history">History</h4><p data-i18n="deliveriesCount">12 deliveries</p></div></div>
+         <div class="action-card"><div class="action-icon icon-gray"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div><div class="action-text"><h4>Skypass</h4><p data-i18n="goldTier">Gold tier</p></div></div>
       </div>
       <div class="app-card weather-card">
          <div class="weather-info"><span class="weather-icon">&#9925;&#65039;</span><div><h4 data-i18n="weatherTitle">Hanoi &mdash; Clear skies</h4><p data-i18n="weatherSub">Optimal flying conditions &middot; 29&deg;C</p></div></div>
@@ -246,49 +135,26 @@
       </div>
     </section>
 
-    <!-- Order Tab -->
     <section id="tab-order" class="tab-view">
       <div class="app-card route-card">
         <h4 class="card-title" data-i18n="route">ROUTE</h4>
         <div class="route-inputs">
            <div class="route-line"></div>
-           <div class="input-group">
-             <span class="dot pickup"></span>
-             <div class="input-wrapper">
-               <label data-i18n="pickup">PICKUP</label>
-               <input id="pickup-input" type="text" data-i18n-ph="pickupPh" placeholder="Enter pickup address..." />
-             </div>
-           </div>
-           <div class="input-group">
-             <span class="dot dropoff"></span>
-             <div class="input-wrapper">
-               <label data-i18n="dropoff">DROP-OFF</label>
-               <input id="dropoff-input" type="text" data-i18n-ph="dropoffPh" placeholder="Enter destination..." />
-             </div>
-           </div>
+           <div class="input-group"><span class="dot pickup"></span><div class="input-wrapper"><label data-i18n="pickup">PICKUP</label><input id="pickup-input" type="text" placeholder="Enter pickup address..." /></div></div>
+           <div class="input-group"><span class="dot dropoff"></span><div class="input-wrapper"><label data-i18n="dropoff">DROP-OFF</label><input id="dropoff-input" type="text" placeholder="Enter destination..." /></div></div>
         </div>
       </div>
       <div class="quick-select-section">
         <h4 class="card-title" data-i18n="quickSelect">QUICK SELECT</h4>
-        <div class="quick-tags">
-          <span class="tag">Hoan Kiem Lake</span><span class="tag">Ba Dinh Square</span>
-          <span class="tag">West Lake</span><span class="tag">Hanoi Station</span>
-        </div>
+        <div class="quick-tags"><span class="tag">Hoan Kiem Lake</span><span class="tag">Ba Dinh Square</span><span class="tag">West Lake</span><span class="tag">Hanoi Station</span></div>
       </div>
-      <div class="order-actions">
-        <button class="btn btn-primary btn-large glow" id="continue-btn" onclick="openPackageModal()" data-i18n="continueBtn">Continue &rarr;</button>
-      </div>
+      <div class="order-actions"><button class="btn btn-primary btn-large glow" id="continue-btn" onclick="openPackageModal()" data-i18n="continueBtn">Continue &rarr;</button></div>
     </section>
 
-    <!-- Track Tab -->
     <section id="tab-track" class="tab-view track-view">
        <div class="track-drawer">
          <div class="app-card tracking-card">
-           <div class="drone-header">
-             <div class="drone-icon-box"></div>
-             <div class="drone-header-info"><h3>SL-2847</h3><p>Skylink Mk-III &middot; Cargo</p></div>
-             <span class="status-badge outline-red" data-i18n="inFlight">IN FLIGHT</span>
-           </div>
+           <div class="drone-header"><div class="drone-icon-box"></div><div class="drone-header-info"><h3>SL-2847</h3><p>Skylink Mk-III &middot; Cargo</p></div><span class="status-badge outline-red" data-i18n="inFlight">IN FLIGHT</span></div>
            <div class="sn-text">SN: 847-HAN-22</div>
            <div class="telemetry-grid compact mt-4">
              <div class="tel-item"><small data-i18n="alt">ALT</small><strong>117<span>m</span></strong></div>
@@ -296,10 +162,7 @@
              <div class="tel-item"><small data-i18n="wind">WIND</small><strong>14<span>km/h</span></strong></div>
              <div class="tel-item"><small data-i18n="bat">BAT</small><strong class="text-green">57<span>%</span></strong></div>
            </div>
-           <div class="battery-bar-container">
-             <div class="battery-labels"><span data-i18n="batteryLabel">Battery</span><span class="text-green">57%</span></div>
-             <div class="progress-bar"><div class="progress-fill green" style="width:57%"></div></div>
-           </div>
+           <div class="battery-bar-container"><div class="battery-labels"><span data-i18n="batteryLabel">Battery</span><span class="text-green">57%</span></div><div class="progress-bar"><div class="progress-fill green" style="width:57%"></div></div></div>
          </div>
          <div class="app-card delivery-status-card">
            <h4 class="card-title" data-i18n="deliveryStatus">DELIVERY STATUS</h4>
@@ -315,7 +178,6 @@
        </div>
     </section>
 
-    <!-- Profile Tab -->
     <section id="tab-profile" class="tab-view">
       <div class="profile-header"><h2 id="profileName">Loading...</h2><span class="tier-badge">&starf; <span data-i18n="goldTierBadge">GOLD TIER</span></span></div>
       <div class="stats-row">
@@ -349,52 +211,22 @@
     </section>
   </main>
 
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav" id="bottom-nav" style="display:none">
-    <a href="#" class="nav-item active" onclick="switchTab('home')">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-      <span data-i18n="navHome">Home</span>
-    </a>
-    <a href="#" class="nav-item" onclick="switchTab('order')">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-      <span data-i18n="navOrder">Order</span>
-    </a>
-    <a href="#" class="nav-item" onclick="switchTab('track')">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-      <span data-i18n="navTrack">Track</span>
-    </a>
-    <a href="#" class="nav-item" onclick="switchTab('profile')">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      <span data-i18n="navProfile">Profile</span>
-    </a>
+    <a href="#" class="nav-item active" onclick="switchTab('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span data-i18n="navHome">Home</span></a>
+    <a href="#" class="nav-item" onclick="switchTab('order')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg><span data-i18n="navOrder">Order</span></a>
+    <a href="#" class="nav-item" onclick="switchTab('track')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><span data-i18n="navTrack">Track</span></a>
+    <a href="#" class="nav-item" onclick="switchTab('profile')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span data-i18n="navProfile">Profile</span></a>
   </nav>
 
-  <!-- Floating Voice Button -->
   <button id="voice-order-btn" style="display:none" onclick="openVoiceModal()" title="Order by voice">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-      <line x1="12" y1="19" x2="12" y2="23"/>
-      <line x1="8" y1="23" x2="16" y2="23"/>
-    </svg>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
   </button>
 
-  <!-- Voice Order Modal -->
   <div id="voice-modal">
     <div id="voice-modal-content">
-      <div class="voice-modal-header">
-        <h3>🎙️ Voice Order</h3>
-        <button class="voice-close-btn" onclick="closeVoiceModal()">&#x2715;</button>
-      </div>
+      <div class="voice-modal-header"><h3>🎙️ Voice Order</h3><button class="voice-close-btn" onclick="closeVoiceModal()">&#x2715;</button></div>
       <div class="voice-status">
-        <div class="voice-orb" id="voice-orb">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-            <line x1="12" y1="19" x2="12" y2="23"/>
-            <line x1="8" y1="23" x2="16" y2="23"/>
-          </svg>
-        </div>
+        <div class="voice-orb" id="voice-orb"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
         <p class="voice-status-text" id="voice-status-text">Tap below to start</p>
         <p class="voice-transcript" id="voice-transcript">The AI agent will ask for your pickup &amp; drop-off, then open checkout.</p>
       </div>
@@ -403,77 +235,36 @@
     </div>
   </div>
 
-  <!-- Package Size Modal -->
   <div id="package-modal" class="modal">
     <div class="modal-content">
       <h3 class="modal-title" data-i18n="selectPackageSize">Select Package Size</h3>
       <div class="pkg-options">
-        <div class="pkg-option" onclick="selectPackage(this)">
-          <div class="pkg-icon">&#128230;</div>
-          <div class="pkg-info"><strong data-i18n="small">Small</strong><p data-i18n="upTo1kg">Up to 1 kg</p></div>
-          <div class="pkg-price"><strong>45,000&#8363;</strong><p>~8 min</p></div>
-          <div class="radio-circle"></div>
-        </div>
-        <div class="pkg-option" onclick="selectPackage(this)">
-          <div class="pkg-icon">&#128717;</div>
-          <div class="pkg-info"><strong data-i18n="medium">Medium</strong><p data-i18n="upTo3kg">Up to 3 kg</p></div>
-          <div class="pkg-price"><strong>75,000&#8363;</strong><p>~10 min</p></div>
-          <div class="radio-circle"></div>
-        </div>
-        <div class="pkg-option" onclick="selectPackage(this)">
-          <div class="pkg-icon">&#128235;</div>
-          <div class="pkg-info"><strong data-i18n="large">Large</strong><p data-i18n="upTo5kg">Up to 5 kg</p></div>
-          <div class="pkg-price"><strong>120,000&#8363;</strong><p>~14 min</p></div>
-          <div class="radio-circle"></div>
-        </div>
+        <div class="pkg-option" onclick="selectPackage(this)"><div class="pkg-icon">&#128230;</div><div class="pkg-info"><strong data-i18n="small">Small</strong><p data-i18n="upTo1kg">Up to 1 kg</p></div><div class="pkg-price"><strong>45,000&#8363;</strong><p>~8 min</p></div><div class="radio-circle"></div></div>
+        <div class="pkg-option" onclick="selectPackage(this)"><div class="pkg-icon">&#128717;</div><div class="pkg-info"><strong data-i18n="medium">Medium</strong><p data-i18n="upTo3kg">Up to 3 kg</p></div><div class="pkg-price"><strong>75,000&#8363;</strong><p>~10 min</p></div><div class="radio-circle"></div></div>
+        <div class="pkg-option" onclick="selectPackage(this)"><div class="pkg-icon">&#128235;</div><div class="pkg-info"><strong data-i18n="large">Large</strong><p data-i18n="upTo5kg">Up to 5 kg</p></div><div class="pkg-price"><strong>120,000&#8363;</strong><p>~14 min</p></div><div class="radio-circle"></div></div>
       </div>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="closePackageModal()" data-i18n="back">Back</button>
-        <button class="btn btn-primary glow" onclick="openSpeedModal()" data-i18n="continueBtn">Continue &rarr;</button>
-      </div>
+      <div class="modal-actions"><button class="btn btn-outline" onclick="closePackageModal()" data-i18n="back">Back</button><button class="btn btn-primary glow" onclick="openSpeedModal()" data-i18n="continueBtn">Continue &rarr;</button></div>
     </div>
   </div>
 
-  <!-- Delivery Speed Modal -->
   <div id="speed-modal" class="modal">
     <div class="modal-content">
       <h3 class="modal-title" data-i18n="selectDeliverySpeed">Select Delivery Speed</h3>
       <div class="pkg-options">
-        <div class="pkg-option" onclick="selectSpeed(this)">
-          <div class="pkg-icon">&#128640;</div>
-          <div class="pkg-info"><strong>UrgentWing</strong><p data-i18n="urgentDesc">Immediate priority dispatch</p></div>
-          <div class="pkg-price"><strong>+65,000&#8363;</strong><p>ASAP</p></div>
-          <div class="radio-circle"></div>
-        </div>
-        <div class="pkg-option" onclick="selectSpeed(this)">
-          <div class="pkg-icon">&#128338;</div>
-          <div class="pkg-info"><strong data-i18n="standard">Standard</strong><p data-i18n="standardDesc">Flexible same-day window</p></div>
-          <div class="pkg-price"><strong data-i18n="free">Free</strong><p data-i18n="today">Today</p></div>
-          <div class="radio-circle"></div>
-        </div>
+        <div class="pkg-option" onclick="selectSpeed(this)"><div class="pkg-icon">&#128640;</div><div class="pkg-info"><strong>UrgentWing</strong><p data-i18n="urgentDesc">Immediate priority dispatch</p></div><div class="pkg-price"><strong>+65,000&#8363;</strong><p>ASAP</p></div><div class="radio-circle"></div></div>
+        <div class="pkg-option" onclick="selectSpeed(this)"><div class="pkg-icon">&#128338;</div><div class="pkg-info"><strong data-i18n="standard">Standard</strong><p data-i18n="standardDesc">Flexible same-day window</p></div><div class="pkg-price"><strong data-i18n="free">Free</strong><p data-i18n="today">Today</p></div><div class="radio-circle"></div></div>
       </div>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="closeSpeedModal()" data-i18n="back">Back</button>
-        <button class="btn btn-primary glow" onclick="finalizeOrder()" data-i18n="confirmOrder">Confirm Order &rarr;</button>
-      </div>
+      <div class="modal-actions"><button class="btn btn-outline" onclick="closeSpeedModal()" data-i18n="back">Back</button><button class="btn btn-primary glow" onclick="finalizeOrder()" data-i18n="confirmOrder">Confirm Order &rarr;</button></div>
     </div>
   </div>
 
-  <!-- Star Rating Modal -->
   <div id="rating-modal" class="modal">
     <div class="modal-content" id="rating-modal-content">
       <h3 class="modal-title" data-i18n="rateModalTitle">Rate Your Delivery</h3>
       <p class="rating-sub" data-i18n="rateModalSub">How was your experience with drone SL-2847?</p>
-      <div class="star-rating" id="star-rating">
-        <span class="star" data-value="1">&#9733;</span><span class="star" data-value="2">&#9733;</span>
-        <span class="star" data-value="3">&#9733;</span><span class="star" data-value="4">&#9733;</span>
-        <span class="star" data-value="5">&#9733;</span>
-      </div>
+      <div class="star-rating" id="star-rating"><span class="star" data-value="1">&#9733;</span><span class="star" data-value="2">&#9733;</span><span class="star" data-value="3">&#9733;</span><span class="star" data-value="4">&#9733;</span><span class="star" data-value="5">&#9733;</span></div>
       <p class="rating-label" id="rating-label" data-i18n="rateSelectPrompt">Tap a star to rate</p>
-      <div class="modal-actions">
-        <button class="btn btn-outline" onclick="closeRatingModal()" data-i18n="cancel">Cancel</button>
-        <button class="btn btn-primary glow" id="submit-rating-btn" onclick="submitRating()" disabled data-i18n="submitRating">Submit Rating</button>
-      </div>
+      <div class="modal-actions"><button class="btn btn-outline" onclick="closeRatingModal()" data-i18n="cancel">Cancel</button><button class="btn btn-primary glow" id="submit-rating-btn" onclick="submitRating()" disabled data-i18n="submitRating">Submit Rating</button></div>
     </div>
   </div>
 
@@ -487,23 +278,21 @@
       'sb_publishable_ESZwWNCejYXnNaO0WNVQaw_WfQVB81a'
     );
 
+    const APP_URL = 'https://openclaw00.github.io/skylink-mobile-app/';
+
     const loginScreen = document.getElementById('login-screen');
     const appContent = document.getElementById('app-content');
     const bottomNav = document.getElementById('bottom-nav');
     const voiceBtn = document.getElementById('voice-order-btn');
     const loginMsg = document.getElementById('loginMsg');
 
-    function showMsg(msg, type = 'error') {
-      loginMsg.textContent = msg;
-      loginMsg.className = 'login-msg ' + type;
-    }
+    function showMsg(msg, type = 'error') { loginMsg.textContent = msg; loginMsg.className = 'login-msg ' + type; }
 
     function showApp(user, profile) {
       loginScreen.classList.add('hidden');
       appContent.style.display = '';
       bottomNav.style.display = '';
       voiceBtn.style.display = '';
-      // Set profile name
       const name = profile?.full_name || user.email.split('@')[0];
       document.getElementById('profileName').textContent = name;
       document.getElementById('profileEmail').textContent = user.email;
@@ -517,10 +306,8 @@
       }
     }
 
-    // Handle OAuth redirect
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
-        // Ensure profile exists for Google users
         const { data: existing } = await supabase.from('profiles').select('id').eq('id', session.user.id).single();
         if (!existing) {
           await supabase.from('profiles').insert({
@@ -537,7 +324,6 @@
 
     await checkSession();
 
-    // Tab switching
     document.getElementById('tabLogin').addEventListener('click', () => {
       document.getElementById('tabLogin').classList.add('active');
       document.getElementById('tabRegister').classList.remove('active');
@@ -553,16 +339,15 @@
       showMsg('');
     });
 
-    // Google
+    // KEY FIX: redirect back to the mobile app URL, not whatever page triggered the OAuth
     document.getElementById('googleLoginBtn').addEventListener('click', async () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: window.location.href }
+        options: { redirectTo: APP_URL }
       });
       if (error) showMsg(error.message);
     });
 
-    // Login
     document.getElementById('loginBtn').addEventListener('click', async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
@@ -571,7 +356,6 @@
       if (error) return showMsg(error.message);
     });
 
-    // Register
     document.getElementById('registerBtn').addEventListener('click', async () => {
       const name = document.getElementById('regName').value.trim();
       const email = document.getElementById('regEmail').value.trim();
@@ -580,13 +364,10 @@
       if (password.length < 6) return showMsg('Password must be at least 6 characters.');
       const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: name } } });
       if (error) return showMsg(error.message);
-      if (data.user) {
-        await supabase.from('profiles').upsert({ id: data.user.id, full_name: name, email, role: 'user' });
-      }
+      if (data.user) await supabase.from('profiles').upsert({ id: data.user.id, full_name: name, email, role: 'user' });
       showMsg('Account created!', 'success');
     });
 
-    // Logout
     window.handleLogout = async () => {
       await supabase.auth.signOut();
       loginScreen.classList.remove('hidden');
@@ -599,16 +380,10 @@
   <script>
   const AGENT_ID = 'agent_4501kq2g63p3ee9aefab4ngye1dq';
   let ws = null, mediaStream = null, audioContext = null, processorNode = null, audioQueue = [], isPlayingAudio = false;
-
   function openVoiceModal() { document.getElementById('voice-modal').classList.add('show'); }
   function closeVoiceModal() { document.getElementById('voice-modal').classList.remove('show'); stopVoiceSession(); }
-
   function setVoiceUI(state) {
-    const orb = document.getElementById('voice-orb');
-    const status = document.getElementById('voice-status-text');
-    const startBtn = document.getElementById('voice-start-btn');
-    const stopBtn = document.getElementById('voice-stop-btn');
-    const floatBtn = document.getElementById('voice-order-btn');
+    const orb = document.getElementById('voice-orb'), status = document.getElementById('voice-status-text'), startBtn = document.getElementById('voice-start-btn'), stopBtn = document.getElementById('voice-stop-btn'), floatBtn = document.getElementById('voice-order-btn');
     orb.className = 'voice-orb'; floatBtn.classList.remove('listening');
     if (state === 'connecting') { status.textContent = 'Connecting...'; startBtn.style.display = 'none'; stopBtn.style.display = 'block'; }
     else if (state === 'listening') { orb.classList.add('active'); status.textContent = 'Listening...'; startBtn.style.display = 'none'; stopBtn.style.display = 'block'; floatBtn.classList.add('listening'); }
@@ -618,43 +393,42 @@
   function setTranscript(text) { document.getElementById('voice-transcript').textContent = text; }
   function tryFillOrder(msg) {
     const lower = msg.toLowerCase();
-    const pickupMatch = msg.match(/(?:đón|pickup|lấy hàng tại|from)[:\s]+([^,.\n]+)/i);
-    if (pickupMatch) document.getElementById('pickup-input').value = pickupMatch[1].trim();
-    const dropoffMatch = msg.match(/(?:giao đến|drop.?off|deliver(?:y)? to|destination)[:\s]+([^,.\n]+)/i);
-    if (dropoffMatch) document.getElementById('dropoff-input').value = dropoffMatch[1].trim();
-    const confirmWords = ['confirmed','xác nhận','order confirmed','proceeding to checkout'];
-    if (confirmWords.some(k => lower.includes(k))) { stopVoiceSession(); closeVoiceModal(); switchTab('order'); setTimeout(() => openPackageModal(), 400); }
+    const pm = msg.match(/(?:đón|pickup|lấy hàng tại|from)[:\s]+([^,.\n]+)/i);
+    if (pm) document.getElementById('pickup-input').value = pm[1].trim();
+    const dm = msg.match(/(?:giao đến|drop.?off|deliver(?:y)? to|destination)[:\s]+([^,.\n]+)/i);
+    if (dm) document.getElementById('dropoff-input').value = dm[1].trim();
+    if (['confirmed','xác nhận','order confirmed','proceeding to checkout'].some(k => lower.includes(k))) { stopVoiceSession(); closeVoiceModal(); switchTab('order'); setTimeout(() => openPackageModal(), 400); }
   }
-  async function playAudioChunk(base64Audio) {
-    const raw = atob(base64Audio); const bytes = new Uint8Array(raw.length);
+  async function playAudioChunk(b64) {
+    const raw = atob(b64), bytes = new Uint8Array(raw.length);
     for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
-    const samples = new Int16Array(bytes.buffer); const float32 = new Float32Array(samples.length);
-    for (let i = 0; i < samples.length; i++) float32[i] = samples[i] / 32768;
+    const s = new Int16Array(bytes.buffer), f = new Float32Array(s.length);
+    for (let i = 0; i < s.length; i++) f[i] = s[i] / 32768;
     if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const buffer = audioContext.createBuffer(1, float32.length, 16000);
-    buffer.copyToChannel(float32, 0); audioQueue.push(buffer);
+    const buf = audioContext.createBuffer(1, f.length, 16000);
+    buf.copyToChannel(f, 0); audioQueue.push(buf);
     if (!isPlayingAudio) drainAudioQueue();
   }
   function drainAudioQueue() {
-    if (audioQueue.length === 0) { isPlayingAudio = false; return; }
-    isPlayingAudio = true; const buffer = audioQueue.shift();
-    const source = audioContext.createBufferSource(); source.buffer = buffer;
-    source.connect(audioContext.destination); source.onended = drainAudioQueue; source.start();
+    if (!audioQueue.length) { isPlayingAudio = false; return; }
+    isPlayingAudio = true;
+    const src = audioContext.createBufferSource();
+    src.buffer = audioQueue.shift(); src.connect(audioContext.destination); src.onended = drainAudioQueue; src.start();
   }
   async function startMicCapture() {
     mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true } });
     if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
-    const source = audioContext.createMediaStreamSource(mediaStream);
+    const src = audioContext.createMediaStreamSource(mediaStream);
     processorNode = audioContext.createScriptProcessor(4096, 1, 1);
     processorNode.onaudioprocess = (e) => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
-      const float32 = e.inputBuffer.getChannelData(0); const int16 = new Int16Array(float32.length);
-      for (let i = 0; i < float32.length; i++) { const s = Math.max(-1, Math.min(1, float32[i])); int16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; }
-      const bytes2 = new Uint8Array(int16.buffer); let bin = '';
-      for (let i = 0; i < bytes2.byteLength; i++) bin += String.fromCharCode(bytes2[i]);
+      const f = e.inputBuffer.getChannelData(0), i16 = new Int16Array(f.length);
+      for (let i = 0; i < f.length; i++) { const s = Math.max(-1, Math.min(1, f[i])); i16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; }
+      const b = new Uint8Array(i16.buffer); let bin = '';
+      for (let i = 0; i < b.byteLength; i++) bin += String.fromCharCode(b[i]);
       ws.send(JSON.stringify({ user_audio_chunk: btoa(bin) }));
     };
-    source.connect(processorNode); processorNode.connect(audioContext.destination);
+    src.connect(processorNode); processorNode.connect(audioContext.destination);
   }
   function stopMicCapture() {
     if (processorNode) { processorNode.disconnect(); processorNode = null; }
