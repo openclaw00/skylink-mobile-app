@@ -109,11 +109,99 @@
       border-radius: 14px; padding: 14px; font-size: 15px; font-weight: 600;
       font-family: inherit; cursor: pointer;
     }
+
+    /* ── Login Screen ── */
+    #login-screen {
+      position: fixed; inset: 0; z-index: 500;
+      background: var(--bg-color, #0d0d0d);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+    #login-screen.hidden { display: none; }
+    .login-logo { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-bottom: 2.5rem; }
+    .login-logo-icon { width: 64px; height: 64px; background: var(--accent-red, #f22338); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+    .login-logo h1 { font-size: 1.8rem; font-weight: 800; color: #fff; margin: 0; }
+    .login-logo p { color: #666; font-size: 0.9rem; margin: 0; }
+    .login-box { width: 100%; max-width: 360px; }
+    .login-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .login-tab { flex: 1; padding: 0.6rem; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #aaa; border-radius: 0.5rem; cursor: pointer; font-family: inherit; font-size: 0.9rem; transition: all 0.2s; }
+    .login-tab.active { background: var(--accent-red, #f22338); border-color: var(--accent-red, #f22338); color: #fff; }
+    .login-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+    .login-field label { font-size: 0.82rem; color: #aaa; font-weight: 500; }
+    .login-field input { padding: 0.75rem 1rem; border-radius: 0.6rem; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: #fff; font-family: inherit; font-size: 0.95rem; outline: none; }
+    .login-field input:focus { border-color: var(--accent-red, #f22338); }
+    .login-btn { width: 100%; padding: 0.9rem; background: var(--accent-red, #f22338); color: #fff; border: none; border-radius: 0.6rem; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.25rem; }
+    .google-login-btn { width: 100%; padding: 0.85rem; background: #fff; color: #1a1a1a; border: none; border-radius: 0.6rem; font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin-top: 0.75rem; }
+    .google-login-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .login-divider { display: flex; align-items: center; gap: 0.75rem; margin: 1.25rem 0; }
+    .login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+    .login-divider span { font-size: 0.78rem; color: #555; }
+    .login-msg { margin-top: 0.75rem; font-size: 0.85rem; min-height: 1rem; text-align: center; }
+    .login-msg.error { color: #f87171; }
+    .login-msg.success { color: #4ade80; }
   </style>
 </head>
 <body class="app-body">
 
-  <main id="app-content">
+  <!-- Login Screen -->
+  <div id="login-screen">
+    <div class="login-logo">
+      <div class="login-logo-icon">✦</div>
+      <h1>Skylink</h1>
+      <p>Drone delivery for Tay Ho</p>
+    </div>
+    <div class="login-box">
+      <button class="google-login-btn" id="googleLoginBtn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div class="login-divider"><span>or</span></div>
+
+      <div class="login-tabs">
+        <button class="login-tab active" id="tabLogin">Login</button>
+        <button class="login-tab" id="tabRegister">Register</button>
+      </div>
+
+      <div id="loginForm">
+        <div class="login-field">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" />
+        </div>
+        <div class="login-field">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" />
+        </div>
+        <button class="login-btn" id="loginBtn">Sign in</button>
+      </div>
+
+      <div id="registerForm" style="display:none">
+        <div class="login-field">
+          <label>Full name</label>
+          <input type="text" id="regName" placeholder="Nguyen Van A" />
+        </div>
+        <div class="login-field">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="you@example.com" />
+        </div>
+        <div class="login-field">
+          <label>Password</label>
+          <input type="password" id="regPassword" placeholder="At least 6 characters" />
+        </div>
+        <button class="login-btn" id="registerBtn">Create account</button>
+      </div>
+
+      <p class="login-msg" id="loginMsg"></p>
+    </div>
+  </div>
+
+  <main id="app-content" style="display:none">
 
     <!-- Home Tab -->
     <section id="tab-home" class="tab-view active">
@@ -229,7 +317,7 @@
 
     <!-- Profile Tab -->
     <section id="tab-profile" class="tab-view">
-      <div class="profile-header"><h2>Nguyen Van An</h2><span class="tier-badge">&starf; <span data-i18n="goldTierBadge">GOLD TIER</span></span></div>
+      <div class="profile-header"><h2 id="profileName">Loading...</h2><span class="tier-badge">&starf; <span data-i18n="goldTierBadge">GOLD TIER</span></span></div>
       <div class="stats-row">
          <div class="stat-card"><strong>12</strong><span data-i18n="deliveries">Deliveries</span></div>
          <div class="stat-card"><strong>4.9&starf;</strong><span data-i18n="rating">Rating</span></div>
@@ -247,18 +335,22 @@
          <div class="app-card list-item"><div class="drone-icon-sm"></div><div class="item-details"><strong>SL-2831</strong><p>Hoan Kiem &rarr; Tay Ho &middot; 0.5kg</p></div><div class="item-meta"><span data-i18n="apr19">Apr 19</span><span class="check-icon">&check;</span></div></div>
          <div class="app-card list-item"><div class="drone-icon-sm"></div><div class="item-details"><strong>SL-2819</strong><p>Dong Da &rarr; Cau Giay &middot; 2.8kg</p></div><div class="item-meta"><span data-i18n="apr17">Apr 17</span><span class="check-icon">&check;</span></div></div>
       </div>
-      <h3 class="section-title" data-i18n="settings">C&#xE0;i &#x111;&#x1EB7;t</h3>
+      <h3 class="section-title">Settings</h3>
       <div class="app-card settings-card">
          <div class="setting-item">
-           <div class="setting-text"><strong data-i18n="language">Ng&#xF4;n ng&#x1EEF;</strong><p data-i18n="languageValue">Ti&#x1EBF;ng Vi&#x1EC7;t</p></div>
+           <div class="setting-text"><strong data-i18n="language">Ngôn ngữ</strong><p data-i18n="languageValue">Tiếng Việt</p></div>
            <div class="lang-switch"><span class="lang active" id="lang-vi">VI</span><span class="lang" id="lang-en">EN</span></div>
+         </div>
+         <div class="setting-item" style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid rgba(255,255,255,0.06);">
+           <div class="setting-text"><strong>Account</strong><p id="profileEmail" style="color:#666;font-size:12px;"></p></div>
+           <button onclick="handleLogout()" style="background:rgba(242,35,56,0.15);color:#f22338;border:1px solid rgba(242,35,56,0.3);border-radius:8px;padding:6px 14px;font-family:inherit;font-size:13px;cursor:pointer;">Log out</button>
          </div>
       </div>
     </section>
   </main>
 
   <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav" id="bottom-nav" style="display:none">
     <a href="#" class="nav-item active" onclick="switchTab('home')">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       <span data-i18n="navHome">Home</span>
@@ -278,7 +370,7 @@
   </nav>
 
   <!-- Floating Voice Button -->
-  <button id="voice-order-btn" onclick="openVoiceModal()" title="Order by voice">
+  <button id="voice-order-btn" style="display:none" onclick="openVoiceModal()" title="Order by voice">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
       <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
@@ -387,248 +479,208 @@
 
   <script src="script.js"></script>
 
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const supabase = createClient(
+      'https://opckvkulladdxxlxevte.supabase.co',
+      'sb_publishable_ESZwWNCejYXnNaO0WNVQaw_WfQVB81a'
+    );
+
+    const loginScreen = document.getElementById('login-screen');
+    const appContent = document.getElementById('app-content');
+    const bottomNav = document.getElementById('bottom-nav');
+    const voiceBtn = document.getElementById('voice-order-btn');
+    const loginMsg = document.getElementById('loginMsg');
+
+    function showMsg(msg, type = 'error') {
+      loginMsg.textContent = msg;
+      loginMsg.className = 'login-msg ' + type;
+    }
+
+    function showApp(user, profile) {
+      loginScreen.classList.add('hidden');
+      appContent.style.display = '';
+      bottomNav.style.display = '';
+      voiceBtn.style.display = '';
+      // Set profile name
+      const name = profile?.full_name || user.email.split('@')[0];
+      document.getElementById('profileName').textContent = name;
+      document.getElementById('profileEmail').textContent = user.email;
+    }
+
+    async function checkSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+        showApp(session.user, profile);
+      }
+    }
+
+    // Handle OAuth redirect
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        // Ensure profile exists for Google users
+        const { data: existing } = await supabase.from('profiles').select('id').eq('id', session.user.id).single();
+        if (!existing) {
+          await supabase.from('profiles').insert({
+            id: session.user.id,
+            full_name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+            email: session.user.email,
+            role: 'user'
+          });
+        }
+        const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+        showApp(session.user, profile);
+      }
+    });
+
+    await checkSession();
+
+    // Tab switching
+    document.getElementById('tabLogin').addEventListener('click', () => {
+      document.getElementById('tabLogin').classList.add('active');
+      document.getElementById('tabRegister').classList.remove('active');
+      document.getElementById('loginForm').style.display = '';
+      document.getElementById('registerForm').style.display = 'none';
+      showMsg('');
+    });
+    document.getElementById('tabRegister').addEventListener('click', () => {
+      document.getElementById('tabRegister').classList.add('active');
+      document.getElementById('tabLogin').classList.remove('active');
+      document.getElementById('registerForm').style.display = '';
+      document.getElementById('loginForm').style.display = 'none';
+      showMsg('');
+    });
+
+    // Google
+    document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.href }
+      });
+      if (error) showMsg(error.message);
+    });
+
+    // Login
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      if (!email || !password) return showMsg('Please fill in all fields.');
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return showMsg(error.message);
+    });
+
+    // Register
+    document.getElementById('registerBtn').addEventListener('click', async () => {
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      if (!name || !email || !password) return showMsg('Please fill in all fields.');
+      if (password.length < 6) return showMsg('Password must be at least 6 characters.');
+      const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: name } } });
+      if (error) return showMsg(error.message);
+      if (data.user) {
+        await supabase.from('profiles').upsert({ id: data.user.id, full_name: name, email, role: 'user' });
+      }
+      showMsg('Account created!', 'success');
+    });
+
+    // Logout
+    window.handleLogout = async () => {
+      await supabase.auth.signOut();
+      loginScreen.classList.remove('hidden');
+      appContent.style.display = 'none';
+      bottomNav.style.display = 'none';
+      voiceBtn.style.display = 'none';
+    };
+  </script>
+
   <script>
-  // ── ElevenLabs Voice Order — WebSocket implementation ──────────────────────
-  // No widget, no hacks. Direct WebSocket to ElevenLabs Conversational AI API.
-
   const AGENT_ID = 'agent_4501kq2g63p3ee9aefab4ngye1dq';
+  let ws = null, mediaStream = null, audioContext = null, processorNode = null, audioQueue = [], isPlayingAudio = false;
 
-  let ws = null;
-  let mediaStream = null;
-  let audioContext = null;
-  let processorNode = null;
-  let audioQueue = [];
-  let isPlayingAudio = false;
-
-  // ── UI helpers ──────────────────────────────────────────────────────────────
-
-  function openVoiceModal() {
-    document.getElementById('voice-modal').classList.add('show');
-  }
-
-  function closeVoiceModal() {
-    document.getElementById('voice-modal').classList.remove('show');
-    stopVoiceSession();
-  }
+  function openVoiceModal() { document.getElementById('voice-modal').classList.add('show'); }
+  function closeVoiceModal() { document.getElementById('voice-modal').classList.remove('show'); stopVoiceSession(); }
 
   function setVoiceUI(state) {
-    const orb      = document.getElementById('voice-orb');
-    const status   = document.getElementById('voice-status-text');
+    const orb = document.getElementById('voice-orb');
+    const status = document.getElementById('voice-status-text');
     const startBtn = document.getElementById('voice-start-btn');
-    const stopBtn  = document.getElementById('voice-stop-btn');
+    const stopBtn = document.getElementById('voice-stop-btn');
     const floatBtn = document.getElementById('voice-order-btn');
-
-    orb.className = 'voice-orb';
-    floatBtn.classList.remove('listening');
-
-    if (state === 'connecting') {
-      status.textContent = 'Connecting...';
-      startBtn.style.display = 'none';
-      stopBtn.style.display = 'block';
-    } else if (state === 'listening') {
-      orb.classList.add('active');
-      status.textContent = 'Listening...';
-      startBtn.style.display = 'none';
-      stopBtn.style.display = 'block';
-      floatBtn.classList.add('listening');
-    } else if (state === 'speaking') {
-      orb.classList.add('speaking');
-      status.textContent = 'Agent speaking...';
-      startBtn.style.display = 'none';
-      stopBtn.style.display = 'block';
-    } else {
-      status.textContent = 'Tap below to start';
-      startBtn.style.display = 'block';
-      stopBtn.style.display = 'none';
-    }
+    orb.className = 'voice-orb'; floatBtn.classList.remove('listening');
+    if (state === 'connecting') { status.textContent = 'Connecting...'; startBtn.style.display = 'none'; stopBtn.style.display = 'block'; }
+    else if (state === 'listening') { orb.classList.add('active'); status.textContent = 'Listening...'; startBtn.style.display = 'none'; stopBtn.style.display = 'block'; floatBtn.classList.add('listening'); }
+    else if (state === 'speaking') { orb.classList.add('speaking'); status.textContent = 'Agent speaking...'; startBtn.style.display = 'none'; stopBtn.style.display = 'block'; }
+    else { status.textContent = 'Tap below to start'; startBtn.style.display = 'block'; stopBtn.style.display = 'none'; }
   }
-
-  function setTranscript(text) {
-    document.getElementById('voice-transcript').textContent = text;
-  }
-
-  // ── Order auto-fill ─────────────────────────────────────────────────────────
-
+  function setTranscript(text) { document.getElementById('voice-transcript').textContent = text; }
   function tryFillOrder(msg) {
     const lower = msg.toLowerCase();
-
     const pickupMatch = msg.match(/(?:đón|pickup|lấy hàng tại|from)[:\s]+([^,.\n]+)/i);
     if (pickupMatch) document.getElementById('pickup-input').value = pickupMatch[1].trim();
-
     const dropoffMatch = msg.match(/(?:giao đến|drop.?off|deliver(?:y)? to|destination)[:\s]+([^,.\n]+)/i);
     if (dropoffMatch) document.getElementById('dropoff-input').value = dropoffMatch[1].trim();
-
-    const confirmWords = ['confirmed', 'xác nhận', 'đã xác nhận', 'order confirmed', 'đặt hàng thành công', 'proceeding to checkout'];
-    if (confirmWords.some(k => lower.includes(k))) {
-      stopVoiceSession();
-      closeVoiceModal();
-      switchTab('order');
-      setTimeout(() => openPackageModal(), 400);
-    }
+    const confirmWords = ['confirmed','xác nhận','order confirmed','proceeding to checkout'];
+    if (confirmWords.some(k => lower.includes(k))) { stopVoiceSession(); closeVoiceModal(); switchTab('order'); setTimeout(() => openPackageModal(), 400); }
   }
-
-  // ── Audio playback (PCM → Web Audio) ───────────────────────────────────────
-
   async function playAudioChunk(base64Audio) {
-    const raw = atob(base64Audio);
-    const bytes = new Uint8Array(raw.length);
+    const raw = atob(base64Audio); const bytes = new Uint8Array(raw.length);
     for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
-
-    // ElevenLabs sends 16-bit PCM at 16000 Hz mono by default over WebSocket
-    const samples = new Int16Array(bytes.buffer);
-    const float32 = new Float32Array(samples.length);
+    const samples = new Int16Array(bytes.buffer); const float32 = new Float32Array(samples.length);
     for (let i = 0; i < samples.length; i++) float32[i] = samples[i] / 32768;
-
     if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
     const buffer = audioContext.createBuffer(1, float32.length, 16000);
-    buffer.copyToChannel(float32, 0);
-
-    audioQueue.push(buffer);
+    buffer.copyToChannel(float32, 0); audioQueue.push(buffer);
     if (!isPlayingAudio) drainAudioQueue();
   }
-
   function drainAudioQueue() {
     if (audioQueue.length === 0) { isPlayingAudio = false; return; }
-    isPlayingAudio = true;
-    const buffer = audioQueue.shift();
-    const source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioContext.destination);
-    source.onended = drainAudioQueue;
-    source.start();
+    isPlayingAudio = true; const buffer = audioQueue.shift();
+    const source = audioContext.createBufferSource(); source.buffer = buffer;
+    source.connect(audioContext.destination); source.onended = drainAudioQueue; source.start();
   }
-
-  // ── Mic capture → base64 PCM chunks ────────────────────────────────────────
-
   async function startMicCapture() {
     mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true } });
     if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
-
     const source = audioContext.createMediaStreamSource(mediaStream);
-
-    // ScriptProcessor for broad compatibility (including Android WebView)
     processorNode = audioContext.createScriptProcessor(4096, 1, 1);
     processorNode.onaudioprocess = (e) => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
-      const float32 = e.inputBuffer.getChannelData(0);
-      const int16 = new Int16Array(float32.length);
-      for (let i = 0; i < float32.length; i++) {
-        const s = Math.max(-1, Math.min(1, float32[i]));
-        int16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
-      }
-      // Convert to base64
-      const bytes = new Uint8Array(int16.buffer);
-      let bin = '';
-      for (let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
-      const b64 = btoa(bin);
-      ws.send(JSON.stringify({ user_audio_chunk: b64 }));
+      const float32 = e.inputBuffer.getChannelData(0); const int16 = new Int16Array(float32.length);
+      for (let i = 0; i < float32.length; i++) { const s = Math.max(-1, Math.min(1, float32[i])); int16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; }
+      const bytes2 = new Uint8Array(int16.buffer); let bin = '';
+      for (let i = 0; i < bytes2.byteLength; i++) bin += String.fromCharCode(bytes2[i]);
+      ws.send(JSON.stringify({ user_audio_chunk: btoa(bin) }));
     };
-
-    source.connect(processorNode);
-    processorNode.connect(audioContext.destination);
+    source.connect(processorNode); processorNode.connect(audioContext.destination);
   }
-
   function stopMicCapture() {
     if (processorNode) { processorNode.disconnect(); processorNode = null; }
     if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
   }
-
-  // ── WebSocket session ───────────────────────────────────────────────────────
-
   async function startVoiceSession() {
-    setVoiceUI('connecting');
-    setTranscript('');
-
-    try {
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch (e) {
-      setTranscript('Microphone access denied. Please allow mic permission.');
-      setVoiceUI('idle');
-      return;
-    }
-
-    const wsUrl = `wss://api.elevenlabs.io/v1/convai/conversation?agent_id=${AGENT_ID}`;
-    ws = new WebSocket(wsUrl);
-
-    ws.onopen = async () => {
-      // Send initiation handshake
-      ws.send(JSON.stringify({ type: 'conversation_initiation_client_data' }));
-      await startMicCapture();
-      setVoiceUI('listening');
-    };
-
+    setVoiceUI('connecting'); setTranscript('');
+    try { await navigator.mediaDevices.getUserMedia({ audio: true }); } catch(e) { setTranscript('Microphone access denied.'); setVoiceUI('idle'); return; }
+    ws = new WebSocket(`wss://api.elevenlabs.io/v1/convai/conversation?agent_id=${AGENT_ID}`);
+    ws.onopen = async () => { ws.send(JSON.stringify({ type: 'conversation_initiation_client_data' })); await startMicCapture(); setVoiceUI('listening'); };
     ws.onmessage = (event) => {
-      let data;
-      try { data = JSON.parse(event.data); } catch { return; }
-
-      switch (data.type) {
-        case 'conversation_initiation_metadata':
-          // Connection confirmed
-          break;
-
-        case 'user_transcript':
-          setTranscript('You: ' + (data.user_transcription_event?.user_transcript || ''));
-          setVoiceUI('listening');
-          break;
-
-        case 'agent_response':
-          const agentText = data.agent_response_event?.agent_response || '';
-          setTranscript('Agent: ' + agentText);
-          setVoiceUI('speaking');
-          tryFillOrder(agentText);
-          break;
-
-        case 'audio':
-          if (data.audio_event?.audio_base_64) {
-            playAudioChunk(data.audio_event.audio_base_64);
-          }
-          break;
-
-        case 'ping':
-          // Must respond to pings to keep connection alive
-          ws.send(JSON.stringify({
-            type: 'pong',
-            event_id: data.ping_event?.event_id
-          }));
-          break;
-
-        case 'interruption':
-          // Agent was interrupted — clear audio queue
-          audioQueue = [];
-          isPlayingAudio = false;
-          setVoiceUI('listening');
-          break;
-
-        case 'agent_response_correction':
-          // Agent corrected itself
-          const corrected = data.agent_response_correction_event?.corrected_agent_response || '';
-          if (corrected) setTranscript('Agent: ' + corrected);
-          break;
+      let data; try { data = JSON.parse(event.data); } catch { return; }
+      switch(data.type) {
+        case 'user_transcript': setTranscript('You: ' + (data.user_transcription_event?.user_transcript || '')); setVoiceUI('listening'); break;
+        case 'agent_response': const t = data.agent_response_event?.agent_response || ''; setTranscript('Agent: ' + t); setVoiceUI('speaking'); tryFillOrder(t); break;
+        case 'audio': if (data.audio_event?.audio_base_64) playAudioChunk(data.audio_event.audio_base_64); break;
+        case 'ping': ws.send(JSON.stringify({ type: 'pong', event_id: data.ping_event?.event_id })); break;
+        case 'interruption': audioQueue = []; isPlayingAudio = false; setVoiceUI('listening'); break;
       }
     };
-
-    ws.onerror = (err) => {
-      console.error('WS error', err);
-      setTranscript('Connection error. Please try again.');
-      stopVoiceSession();
-    };
-
-    ws.onclose = () => {
-      stopMicCapture();
-      setVoiceUI('idle');
-    };
+    ws.onerror = () => { setTranscript('Connection error. Please try again.'); stopVoiceSession(); };
+    ws.onclose = () => { stopMicCapture(); setVoiceUI('idle'); };
   }
-
   function stopVoiceSession() {
-    stopMicCapture();
-    audioQueue = [];
-    isPlayingAudio = false;
-    if (ws) {
-      ws.close();
-      ws = null;
-    }
-    setVoiceUI('idle');
+    stopMicCapture(); audioQueue = []; isPlayingAudio = false;
+    if (ws) { ws.close(); ws = null; } setVoiceUI('idle');
   }
   </script>
 </body>
