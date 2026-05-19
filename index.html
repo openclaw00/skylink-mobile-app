@@ -450,20 +450,44 @@
     currentAudioSource = src;
     src.buffer = audioQueue.shift(); src.connect(audioContext.destination); src.onended = drainAudioQueue; src.start();
   }
+  function downsampleTo16k(input, inputSampleRate) {
+    const outputSampleRate = 16000;
+    if (inputSampleRate === outputSampleRate) return input;
+    const ratio = inputSampleRate / outputSampleRate;
+    const outputLength = Math.floor(input.length / ratio);
+    const output = new Float32Array(outputLength);
+    for (let i = 0; i < outputLength; i++) {
+      const start = Math.floor(i * ratio);
+      const end = Math.min(Math.floor((i + 1) * ratio), input.length);
+      let sum = 0;
+      for (let j = start; j < end; j++) sum += input[j];
+      output[i] = sum / Math.max(1, end - start);
+    }
+    return output;
+  }
+  function pcm16Base64(samples) {
+    const i16 = new Int16Array(samples.length);
+    for (let i = 0; i < samples.length; i++) {
+      const s = Math.max(-1, Math.min(1, samples[i]));
+      i16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+    }
+    const bytes = new Uint8Array(i16.buffer);
+    let bin = '';
+    for (let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
   async function startMicCapture(stream) {
     mediaStream = stream;
-    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
     if (audioContext.state === 'suspended') await audioContext.resume();
     const src = audioContext.createMediaStreamSource(mediaStream);
     processorNode = audioContext.createScriptProcessor(4096, 1, 1);
     processorNode.onaudioprocess = (e) => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
       if (isAgentAudioActive || isPlayingAudio || audioQueue.length) return;
-      const f = e.inputBuffer.getChannelData(0), i16 = new Int16Array(f.length);
-      for (let i = 0; i < f.length; i++) { const s = Math.max(-1, Math.min(1, f[i])); i16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; }
-      const b = new Uint8Array(i16.buffer); let bin = '';
-      for (let i = 0; i < b.byteLength; i++) bin += String.fromCharCode(b[i]);
-      ws.send(JSON.stringify({ user_audio_chunk: btoa(bin) }));
+      const input = e.inputBuffer.getChannelData(0);
+      const pcm16 = downsampleTo16k(input, e.inputBuffer.sampleRate || audioContext.sampleRate);
+      ws.send(JSON.stringify({ user_audio_chunk: pcm16Base64(pcm16) }));
     };
     micMonitorGain = audioContext.createGain();
     micMonitorGain.gain.value = 0;
@@ -480,7 +504,7 @@
     setVoiceUI('connecting'); setTranscript('');
     let stream;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
     } catch(e) {
       setTranscript('Microphone access denied.');
       setVoiceUI('idle');
@@ -494,7 +518,11 @@
         case 'user_transcript': setTranscript('You: ' + (data.user_transcription_event?.user_transcript || '')); setVoiceUI('listening'); break;
         case 'agent_response': const t = data.agent_response_event?.agent_response || ''; setTranscript('Agent: ' + t); setVoiceUI('speaking'); tryFillOrder(t); break;
         case 'audio': if (data.audio_event?.audio_base_64) playAudioChunk(data.audio_event.audio_base_64); break;
-        case 'ping': ws.send(JSON.stringify({ type: 'pong', event_id: data.ping_event?.event_id })); break;
+        case 'ping':
+          setTimeout(() => {
+            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'pong', event_id: data.ping_event?.event_id }));
+          }, data.ping_event?.ping_ms || 0);
+          break;
         case 'interruption':
           audioQueue = []; isPlayingAudio = false; isAgentAudioActive = false;
           if (agentAudioIdleTimer) { clearTimeout(agentAudioIdleTimer); agentAudioIdleTimer = null; }
@@ -504,7 +532,11 @@
       }
     };
     ws.onerror = () => { setTranscript('Connection error. Please try again.'); stopVoiceSession(); };
-    ws.onclose = () => { stopMicCapture(); setVoiceUI('idle'); };
+    ws.onclose = (event) => {
+      stopMicCapture();
+      setVoiceUI('idle');
+      if (!event.wasClean) setTranscript(`Connection closed (${event.code || 'unknown'}). Please try again.`);
+    };
   }
   function stopVoiceSession() {
     stopMicCapture(); audioQueue = []; isPlayingAudio = false; isAgentAudioActive = false;
