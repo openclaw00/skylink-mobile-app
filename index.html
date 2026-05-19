@@ -401,7 +401,7 @@
 
   <script>
   const AGENT_ID = 'agent_4501kq2g63p3ee9aefab4ngye1dq';
-  let ws = null, mediaStream = null, audioContext = null, processorNode = null, micMonitorGain = null, audioQueue = [], isPlayingAudio = false, isAgentAudioActive = false, currentAudioSource = null, agentAudioIdleTimer = null;
+  let ws = null, mediaStream = null, audioContext = null, processorNode = null, micMonitorGain = null, audioQueue = [], isPlayingAudio = false, isAgentAudioActive = false, currentAudioSource = null, agentAudioIdleTimer = null, voiceKeepaliveTimer = null, userStoppedVoice = false;
   function openVoiceModal() { document.getElementById('voice-modal').classList.add('show'); }
   function closeVoiceModal() { document.getElementById('voice-modal').classList.remove('show'); stopVoiceSession(); }
   function setVoiceUI(state) {
@@ -498,9 +498,24 @@
     if (micMonitorGain) { micMonitorGain.disconnect(); micMonitorGain = null; }
     if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
   }
-  async function startVoiceSession() {
-    audioQueue = []; isPlayingAudio = false; isAgentAudioActive = false; currentAudioSource = null;
+  function resetVoiceAudioState() {
+    audioQueue = [];
+    isPlayingAudio = false;
+    isAgentAudioActive = false;
     if (agentAudioIdleTimer) { clearTimeout(agentAudioIdleTimer); agentAudioIdleTimer = null; }
+    if (voiceKeepaliveTimer) { clearInterval(voiceKeepaliveTimer); voiceKeepaliveTimer = null; }
+    if (currentAudioSource) { try { currentAudioSource.stop(); } catch(e) {} currentAudioSource = null; }
+  }
+  function startVoiceKeepalive() {
+    if (voiceKeepaliveTimer) clearInterval(voiceKeepaliveTimer);
+    voiceKeepaliveTimer = setInterval(() => {
+      if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'user_activity' }));
+    }, 5000);
+  }
+  async function startVoiceSession() {
+    if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+    userStoppedVoice = false;
+    resetVoiceAudioState();
     setVoiceUI('connecting'); setTranscript('');
     let stream;
     try {
@@ -511,7 +526,7 @@
       return;
     }
     ws = new WebSocket(`wss://api.elevenlabs.io/v1/convai/conversation?agent_id=${AGENT_ID}`);
-    ws.onopen = async () => { ws.send(JSON.stringify({ type: 'conversation_initiation_client_data' })); await startMicCapture(stream); setVoiceUI('listening'); };
+    ws.onopen = async () => { ws.send(JSON.stringify({ type: 'conversation_initiation_client_data' })); startVoiceKeepalive(); await startMicCapture(stream); setVoiceUI('listening'); };
     ws.onmessage = (event) => {
       let data; try { data = JSON.parse(event.data); } catch { return; }
       switch(data.type) {
@@ -523,26 +538,31 @@
             if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'pong', event_id: data.ping_event?.event_id }));
           }, data.ping_event?.ping_ms || 0);
           break;
-        case 'interruption':
-          audioQueue = []; isPlayingAudio = false; isAgentAudioActive = false;
-          if (agentAudioIdleTimer) { clearTimeout(agentAudioIdleTimer); agentAudioIdleTimer = null; }
-          if (currentAudioSource) { try { currentAudioSource.stop(); } catch(e) {} currentAudioSource = null; }
-          setVoiceUI('listening');
-          break;
+	        case 'interruption':
+	          resetVoiceAudioState();
+	          startVoiceKeepalive();
+	          setVoiceUI('listening');
+	          break;
       }
     };
-    ws.onerror = () => { setTranscript('Connection error. Please try again.'); stopVoiceSession(); };
+    ws.onerror = () => { if (!userStoppedVoice) setTranscript('Connection error. Please try again.'); };
     ws.onclose = (event) => {
       stopMicCapture();
+      resetVoiceAudioState();
+      ws = null;
       setVoiceUI('idle');
-      if (!event.wasClean) setTranscript(`Connection closed (${event.code || 'unknown'}). Please try again.`);
+      if (!userStoppedVoice) {
+        const reason = event.reason ? `: ${event.reason}` : '';
+        setTranscript(`Voice connection closed (${event.code || 'unknown'}${reason}). Tap start to reconnect.`);
+      }
     };
   }
   function stopVoiceSession() {
-    stopMicCapture(); audioQueue = []; isPlayingAudio = false; isAgentAudioActive = false;
-    if (agentAudioIdleTimer) { clearTimeout(agentAudioIdleTimer); agentAudioIdleTimer = null; }
-    if (currentAudioSource) { try { currentAudioSource.stop(); } catch(e) {} currentAudioSource = null; }
-    if (ws) { ws.close(); ws = null; } setVoiceUI('idle');
+    userStoppedVoice = true;
+    stopMicCapture();
+    resetVoiceAudioState();
+    if (ws) { const closingWs = ws; ws = null; closingWs.close(); }
+    setVoiceUI('idle');
   }
   </script>
 </body>
