@@ -401,7 +401,7 @@
 
   <script>
   const AGENT_ID = 'agent_4501kq2g63p3ee9aefab4ngye1dq';
-  let ws = null, mediaStream = null, audioContext = null, processorNode = null, audioQueue = [], isPlayingAudio = false;
+  let ws = null, mediaStream = null, audioContext = null, processorNode = null, micMonitorGain = null, audioQueue = [], isPlayingAudio = false, isAgentAudioActive = false, currentAudioSource = null, agentAudioIdleTimer = null;
   function openVoiceModal() { document.getElementById('voice-modal').classList.add('show'); }
   function closeVoiceModal() { document.getElementById('voice-modal').classList.remove('show'); stopVoiceSession(); }
   function setVoiceUI(state) {
@@ -427,40 +427,67 @@
     const s = new Int16Array(bytes.buffer), f = new Float32Array(s.length);
     for (let i = 0; i < s.length; i++) f[i] = s[i] / 32768;
     if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioContext.state === 'suspended') await audioContext.resume();
     const buf = audioContext.createBuffer(1, f.length, 16000);
     buf.copyToChannel(f, 0); audioQueue.push(buf);
+    isAgentAudioActive = true;
+    if (agentAudioIdleTimer) clearTimeout(agentAudioIdleTimer);
     if (!isPlayingAudio) drainAudioQueue();
   }
   function drainAudioQueue() {
-    if (!audioQueue.length) { isPlayingAudio = false; return; }
+    if (!audioQueue.length) {
+      isPlayingAudio = false;
+      currentAudioSource = null;
+      if (agentAudioIdleTimer) clearTimeout(agentAudioIdleTimer);
+      agentAudioIdleTimer = setTimeout(() => {
+        isAgentAudioActive = false;
+        if (ws && ws.readyState === WebSocket.OPEN) setVoiceUI('listening');
+      }, 350);
+      return;
+    }
     isPlayingAudio = true;
     const src = audioContext.createBufferSource();
+    currentAudioSource = src;
     src.buffer = audioQueue.shift(); src.connect(audioContext.destination); src.onended = drainAudioQueue; src.start();
   }
-  async function startMicCapture() {
-    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true } });
+  async function startMicCapture(stream) {
+    mediaStream = stream;
     if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+    if (audioContext.state === 'suspended') await audioContext.resume();
     const src = audioContext.createMediaStreamSource(mediaStream);
     processorNode = audioContext.createScriptProcessor(4096, 1, 1);
     processorNode.onaudioprocess = (e) => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      if (isAgentAudioActive || isPlayingAudio || audioQueue.length) return;
       const f = e.inputBuffer.getChannelData(0), i16 = new Int16Array(f.length);
       for (let i = 0; i < f.length; i++) { const s = Math.max(-1, Math.min(1, f[i])); i16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; }
       const b = new Uint8Array(i16.buffer); let bin = '';
       for (let i = 0; i < b.byteLength; i++) bin += String.fromCharCode(b[i]);
       ws.send(JSON.stringify({ user_audio_chunk: btoa(bin) }));
     };
-    src.connect(processorNode); processorNode.connect(audioContext.destination);
+    micMonitorGain = audioContext.createGain();
+    micMonitorGain.gain.value = 0;
+    src.connect(processorNode); processorNode.connect(micMonitorGain); micMonitorGain.connect(audioContext.destination);
   }
   function stopMicCapture() {
     if (processorNode) { processorNode.disconnect(); processorNode = null; }
+    if (micMonitorGain) { micMonitorGain.disconnect(); micMonitorGain = null; }
     if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
   }
   async function startVoiceSession() {
+    audioQueue = []; isPlayingAudio = false; isAgentAudioActive = false; currentAudioSource = null;
+    if (agentAudioIdleTimer) { clearTimeout(agentAudioIdleTimer); agentAudioIdleTimer = null; }
     setVoiceUI('connecting'); setTranscript('');
-    try { await navigator.mediaDevices.getUserMedia({ audio: true }); } catch(e) { setTranscript('Microphone access denied.'); setVoiceUI('idle'); return; }
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+    } catch(e) {
+      setTranscript('Microphone access denied.');
+      setVoiceUI('idle');
+      return;
+    }
     ws = new WebSocket(`wss://api.elevenlabs.io/v1/convai/conversation?agent_id=${AGENT_ID}`);
-    ws.onopen = async () => { ws.send(JSON.stringify({ type: 'conversation_initiation_client_data' })); await startMicCapture(); setVoiceUI('listening'); };
+    ws.onopen = async () => { ws.send(JSON.stringify({ type: 'conversation_initiation_client_data' })); await startMicCapture(stream); setVoiceUI('listening'); };
     ws.onmessage = (event) => {
       let data; try { data = JSON.parse(event.data); } catch { return; }
       switch(data.type) {
@@ -468,14 +495,21 @@
         case 'agent_response': const t = data.agent_response_event?.agent_response || ''; setTranscript('Agent: ' + t); setVoiceUI('speaking'); tryFillOrder(t); break;
         case 'audio': if (data.audio_event?.audio_base_64) playAudioChunk(data.audio_event.audio_base_64); break;
         case 'ping': ws.send(JSON.stringify({ type: 'pong', event_id: data.ping_event?.event_id })); break;
-        case 'interruption': audioQueue = []; isPlayingAudio = false; setVoiceUI('listening'); break;
+        case 'interruption':
+          audioQueue = []; isPlayingAudio = false; isAgentAudioActive = false;
+          if (agentAudioIdleTimer) { clearTimeout(agentAudioIdleTimer); agentAudioIdleTimer = null; }
+          if (currentAudioSource) { try { currentAudioSource.stop(); } catch(e) {} currentAudioSource = null; }
+          setVoiceUI('listening');
+          break;
       }
     };
     ws.onerror = () => { setTranscript('Connection error. Please try again.'); stopVoiceSession(); };
     ws.onclose = () => { stopMicCapture(); setVoiceUI('idle'); };
   }
   function stopVoiceSession() {
-    stopMicCapture(); audioQueue = []; isPlayingAudio = false;
+    stopMicCapture(); audioQueue = []; isPlayingAudio = false; isAgentAudioActive = false;
+    if (agentAudioIdleTimer) { clearTimeout(agentAudioIdleTimer); agentAudioIdleTimer = null; }
+    if (currentAudioSource) { try { currentAudioSource.stop(); } catch(e) {} currentAudioSource = null; }
     if (ws) { ws.close(); ws = null; } setVoiceUI('idle');
   }
   </script>

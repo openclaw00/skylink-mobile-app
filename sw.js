@@ -1,4 +1,4 @@
-const CACHE = 'skylink-v1';
+const CACHE = 'skylink-v2';
 const ASSETS = [
   '/skylink-mobile-app/',
   '/skylink-mobile-app/index.html',
