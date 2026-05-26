@@ -170,7 +170,44 @@
     </section>
 
     <section id="tab-track" class="tab-view track-view">
+       <div class="track-map">
+         <div class="map-grid"></div>
+         <div class="map-road road-main"></div>
+         <div class="map-road road-side road-side-a"></div>
+         <div class="map-road road-side road-side-b"></div>
+         <svg class="flight-path" viewBox="0 0 360 260" aria-hidden="true">
+           <path class="flight-shadow" d="M42 206 C88 156 116 152 156 130 S236 89 318 44" />
+           <path class="flight-line" d="M42 206 C88 156 116 152 156 130 S236 89 318 44" />
+         </svg>
+         <div class="map-pin pickup-pin"><span></span><strong>Pickup</strong><small>Tran Hung Dao</small></div>
+         <div class="map-pin dropoff-pin"><span></span><strong>Drop-off</strong><small>Tay Ho</small></div>
+         <div class="drone-map-marker">
+           <div class="drone-signal"></div>
+           <div class="drone-map-icon"></div>
+         </div>
+         <div class="track-map-topbar">
+           <button class="map-control" aria-label="Recenter map">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path></svg>
+           </button>
+           <div class="map-status-pill"><span></span>Live route</div>
+         </div>
+         <div class="eta-panel">
+           <div><small>ARRIVING IN</small><strong>4 min</strong></div>
+           <div><small>DISTANCE</small><strong>1.1 km</strong></div>
+           <div><small>LANDING</small><strong>West Lake</strong></div>
+         </div>
+       </div>
        <div class="track-drawer">
+         <div class="route-summary">
+           <div class="route-endpoint">
+             <span class="route-dot route-dot-pickup"></span>
+             <div><small>Picked up</small><strong>Tran Hung Dao</strong></div>
+           </div>
+           <div class="route-endpoint">
+             <span class="route-dot route-dot-dropoff"></span>
+             <div><small>Landing zone</small><strong>Tay Ho, West Lake</strong></div>
+           </div>
+         </div>
          <div class="app-card tracking-card">
            <div class="drone-header"><div class="drone-icon-box"></div><div class="drone-header-info"><h3>SL-2847</h3><p>Skylink Mk-III &middot; Cargo</p></div><span class="status-badge outline-red" data-i18n="inFlight">IN FLIGHT</span></div>
            <div class="sn-text">SN: 847-HAN-22</div>
@@ -181,6 +218,12 @@
              <div class="tel-item"><small data-i18n="bat">BAT</small><strong class="text-green">57<span>%</span></strong></div>
            </div>
            <div class="battery-bar-container"><div class="battery-labels"><span data-i18n="batteryLabel">Battery</span><span class="text-green">57%</span></div><div class="progress-bar"><div class="progress-fill green" style="width:57%"></div></div></div>
+         </div>
+         <div class="flight-details-grid">
+           <div class="flight-detail"><small>PACKAGE</small><strong>1.2 kg</strong><span>Temperature safe</span></div>
+           <div class="flight-detail"><small>ETA WINDOW</small><strong>14:33</strong><span>On schedule</span></div>
+           <div class="flight-detail"><small>LINK</small><strong>98%</strong><span>5G control</span></div>
+           <div class="flight-detail"><small>WEATHER</small><strong>Clear</strong><span>12 km/h wind</span></div>
          </div>
          <div class="app-card delivery-status-card">
            <h4 class="card-title" data-i18n="deliveryStatus">DELIVERY STATUS</h4>

@@ -414,62 +414,329 @@ small { color: var(--text-muted); font-size: 12px; }
 
 /* Track Tab */
 .track-view {
-  padding: 0;
-  margin: -20px -20px 0; /* Negate app-content padding */
+  padding: 0 0 calc(var(--nav-height) + 24px);
+  margin: -20px -20px calc(-1 * (var(--nav-height) + 20px));
   position: relative;
   min-height: calc(100vh - var(--nav-height));
-  background: url('data:image/svg+xml;utf8,<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="400" fill="%23F5F7FA"/><path d="M0 20h400M0 60h400M0 100h400M0 140h400M0 180h400M0 220h400M0 260h400M0 300h400M0 340h400M0 380h400M20 0v400M60 0v400M100 0v400M140 0v400M180 0v400M220 0v400M260 0v400M300 0v400M340 0v400M380 0v400" stroke="rgba(0,0,0,0.04)" stroke-width="1"/></svg>');
+  background: #eef2f5;
+  overflow: hidden;
 }
 
-.map-overlay {
-  position: absolute;
-  top: 100px;
-  left: 0;
+.track-map {
+  position: relative;
   width: 100%;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  min-height: 390px;
+  height: 48vh;
+  max-height: 520px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(242, 35, 56, 0.09), transparent 30%),
+    radial-gradient(circle at 78% 28%, rgba(46, 204, 113, 0.1), transparent 32%),
+    #eef2f5;
 }
 
-.pulse-marker {
-  width: 100px;
-  height: 100px;
+.map-grid {
+  position: absolute;
+  inset: -40px;
+  background-image:
+    linear-gradient(rgba(26, 26, 46, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 26, 46, 0.045) 1px, transparent 1px);
+  background-size: 34px 34px;
+  transform: rotate(-12deg) scale(1.15);
+}
+
+.map-road {
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(26, 26, 46, 0.08);
+}
+
+.road-main {
+  width: 560px;
+  height: 28px;
+  left: -92px;
+  top: 174px;
+  transform: rotate(-24deg);
+}
+
+.road-side {
+  width: 330px;
+  height: 18px;
+}
+
+.road-side-a {
+  left: -40px;
+  top: 82px;
+  transform: rotate(28deg);
+}
+
+.road-side-b {
+  right: -84px;
+  top: 254px;
+  transform: rotate(32deg);
+}
+
+.flight-path {
+  position: absolute;
+  inset: 78px 18px 54px;
+  width: calc(100% - 36px);
+  height: calc(100% - 132px);
+  overflow: visible;
+}
+
+.flight-shadow,
+.flight-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.flight-shadow {
+  stroke: rgba(26, 26, 46, 0.12);
+  stroke-width: 14;
+}
+
+.flight-line {
+  stroke: var(--accent-red);
+  stroke-width: 4;
+  stroke-dasharray: 10 10;
+  animation: routeDash 1.2s linear infinite;
+}
+
+@keyframes routeDash {
+  to { stroke-dashoffset: -20; }
+}
+
+.track-map-topbar {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 18px);
+  left: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.map-control {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid rgba(26, 26, 46, 0.1);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(26, 26, 46, 0.08);
+}
+
+.map-control svg {
+  width: 20px;
+  height: 20px;
+}
+
+.map-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(46, 204, 113, 0.25);
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(26, 26, 46, 0.08);
+}
+
+.map-status-pill span {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(100,100,255,0.2) 0%, rgba(100,100,255,0) 70%);
-  border: 1px solid rgba(100,100,255,0.3);
+  background: var(--accent-green);
+  box-shadow: 0 0 0 5px rgba(46, 204, 113, 0.12);
+}
+
+.map-pin {
+  position: absolute;
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px 10px 34px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.93);
+  border: 1px solid rgba(26, 26, 46, 0.08);
+  box-shadow: 0 10px 24px rgba(26, 26, 46, 0.11);
+}
+
+.map-pin span {
+  position: absolute;
+  left: 12px;
+  top: 15px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.95);
+}
+
+.map-pin strong {
+  color: var(--text-main);
+  font-size: 12px;
+}
+
+.map-pin small {
+  font-size: 11px;
+}
+
+.pickup-pin {
+  left: 26px;
+  bottom: 132px;
+}
+
+.pickup-pin span {
+  background: var(--accent-red);
+}
+
+.dropoff-pin {
+  right: 20px;
+  top: 88px;
+}
+
+.dropoff-pin span {
+  background: var(--accent-green);
+}
+
+.drone-map-marker {
+  position: absolute;
+  left: 53%;
+  top: 42%;
+  width: 72px;
+  height: 72px;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.pulse-marker::after {
-  content: '';
-  width: 20px; height: 20px;
-  background: rgba(100,100,255,0.5);
-  border: 1px solid rgba(100,100,255,0.8);
-  border-radius: 4px;
+
+.drone-signal {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(242, 35, 56, 0.12);
+  animation: mapPulse 1.8s ease-out infinite;
 }
 
-.arriving-badge {
-  margin-top: 20px;
-  background: rgba(0,0,0,0.8);
-  border: 1px solid rgba(242, 35, 56, 0.4);
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  color: var(--text-muted);
+@keyframes mapPulse {
+  0% { transform: scale(0.62); opacity: 0.9; }
+  100% { transform: scale(1.35); opacity: 0; }
 }
-.arriving-badge strong { color: var(--accent-red); font-size: 16px; }
+
+.drone-map-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 16px;
+  background: var(--accent-red);
+  box-shadow: 0 10px 24px rgba(242, 35, 56, 0.28);
+  position: relative;
+  transform: rotate(24deg);
+}
+
+.drone-map-icon::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  background: white;
+  mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="4" r="2"/><circle cx="20" cy="4" r="2"/><circle cx="4" cy="20" r="2"/><circle cx="20" cy="20" r="2"/><path d="M5.5 5.5l5 5m3 3l5 5m-13 0l5-5m3-3l5-5" stroke="currentColor" stroke-width="2"/></svg>') no-repeat center / contain;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="4" r="2"/><circle cx="20" cy="4" r="2"/><circle cx="4" cy="20" r="2"/><circle cx="20" cy="20" r="2"/><path d="M5.5 5.5l5 5m3 3l5 5m-13 0l5-5m3-3l5-5" stroke="currentColor" stroke-width="2"/></svg>') no-repeat center / contain;
+}
+
+.eta-panel {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 88px;
+  display: grid;
+  grid-template-columns: 0.85fr 0.85fr 1.3fr;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(26, 26, 46, 0.08);
+  box-shadow: 0 12px 28px rgba(26, 26, 46, 0.12);
+}
+
+.eta-panel div {
+  min-width: 0;
+}
+
+.eta-panel small,
+.route-endpoint small,
+.flight-detail small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.eta-panel strong {
+  display: block;
+  color: var(--text-main);
+  font-size: 16px;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .track-drawer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  position: relative;
+  z-index: 2;
   width: 100%;
-  padding: 20px;
-  padding-bottom: calc(var(--nav-height) + 20px);
-  background: linear-gradient(to top, var(--bg-color) 80%, transparent);
+  margin-top: -60px;
+  padding: 0 20px 20px;
+}
+
+.route-summary {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(26, 26, 46, 0.08);
+  box-shadow: 0 12px 28px rgba(26, 26, 46, 0.1);
+}
+
+.route-endpoint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.route-endpoint strong {
+  display: block;
+  color: var(--text-main);
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.route-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  box-shadow: 0 0 0 5px rgba(26, 26, 46, 0.05);
+}
+
+.route-dot-pickup {
+  background: var(--accent-red);
+}
+
+.route-dot-dropoff {
+  background: var(--accent-green);
 }
 
 .tracking-card { margin-bottom: 16px; }
@@ -479,6 +746,38 @@ small { color: var(--text-muted); font-size: 12px; }
 
 .battery-bar-container { margin-top: 16px; }
 .battery-labels { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px; color: var(--text-muted); }
+
+.flight-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.flight-detail {
+  min-width: 0;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.flight-detail strong {
+  display: block;
+  color: var(--text-main);
+  font-size: 18px;
+  margin: 4px 0 2px;
+}
+
+.flight-detail span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* Timeline */
 .delivery-status-card { position: relative; }
