@@ -1030,6 +1030,46 @@ small { color: var(--text-muted); font-size: 12px; }
 
 .modal-title { margin-bottom: 20px; font-size: 18px; color: var(--text-main); }
 
+.estimate-panel {
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  background: rgba(242, 35, 56, 0.04);
+}
+
+.estimate-row,
+.estimate-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.estimate-row span,
+.estimate-total span {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.estimate-row strong,
+.estimate-total strong {
+  color: var(--text-main);
+  font-size: 14px;
+  text-align: right;
+}
+
+.estimate-total {
+  border-top: 1px solid var(--card-border);
+  margin-top: 6px;
+  padding-top: 16px;
+}
+
+.estimate-total strong {
+  color: var(--accent-red);
+  font-size: 22px;
+}
+
 .pkg-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
 
 .pkg-option {

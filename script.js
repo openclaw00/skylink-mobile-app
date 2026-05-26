@@ -73,7 +73,7 @@ const translations = {
     urgentDesc:        'Immediate priority dispatch',
     standard:          'Standard',
     standardDesc:      'Flexible same-day window',
-    free:              'Free',
+    free:              '+0',
     today:             'Today',
     confirmOrder:      'Confirm Order →',
     // Rating modal
@@ -154,7 +154,7 @@ const translations = {
     urgentDesc:        'Ưu tiên điều phối ngay lập tức',
     standard:          'Tiêu Chuẩn',
     standardDesc:      'Khung giờ linh hoạt trong ngày',
-    free:              'Miễn phí',
+    free:              '+0',
     today:             'Hôm nay',
     confirmOrder:      'Xác Nhận Đơn →',
     // Rating modal
@@ -228,6 +228,23 @@ function closePackageModal() {
 function selectPackage(element) {
   document.querySelectorAll('#package-modal .pkg-option').forEach(opt => opt.classList.remove('selected'));
   element.classList.add('selected');
+}
+
+function openVoiceEstimateModal() {
+  const pickup = document.getElementById('pickup-input')?.value.trim() || 'Pickup';
+  const dropoff = document.getElementById('dropoff-input')?.value.trim() || 'drop-off';
+  const route = document.getElementById('voice-estimate-route');
+  if (route) route.textContent = `${pickup} to ${dropoff}`;
+  document.getElementById('voice-estimate-modal').classList.add('show');
+}
+
+function closeVoiceEstimateModal() {
+  document.getElementById('voice-estimate-modal').classList.remove('show');
+}
+
+function openSpeedModalFromVoice() {
+  closeVoiceEstimateModal();
+  document.getElementById('speed-modal').classList.add('show');
 }
 
 function openSpeedModal() {

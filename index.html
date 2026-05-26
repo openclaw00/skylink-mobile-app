@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Skylink App</title>
-  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="styles.css?v=6" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="logo-transparent.png">
@@ -308,12 +308,24 @@
     </div>
   </div>
 
+  <div id="voice-estimate-modal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Voice Order Estimate</h3>
+      <div class="estimate-panel">
+        <div class="estimate-row"><span>Route</span><strong id="voice-estimate-route">Pickup to drop-off</strong></div>
+        <div class="estimate-row"><span>Estimated package</span><strong>Standard drone cargo</strong></div>
+        <div class="estimate-total"><span>Estimated price</span><strong>75,000&#8363;</strong></div>
+      </div>
+      <div class="modal-actions"><button class="btn btn-outline" onclick="closeVoiceEstimateModal()" data-i18n="back">Back</button><button class="btn btn-primary glow" onclick="openSpeedModalFromVoice()" data-i18n="continueBtn">Continue &rarr;</button></div>
+    </div>
+  </div>
+
   <div id="speed-modal" class="modal">
     <div class="modal-content">
       <h3 class="modal-title" data-i18n="selectDeliverySpeed">Select Delivery Speed</h3>
       <div class="pkg-options">
         <div class="pkg-option" onclick="selectSpeed(this)"><div class="pkg-icon">&#128640;</div><div class="pkg-info"><strong>UrgentWing</strong><p data-i18n="urgentDesc">Immediate priority dispatch</p></div><div class="pkg-price"><strong>+65,000&#8363;</strong><p>ASAP</p></div><div class="radio-circle"></div></div>
-        <div class="pkg-option" onclick="selectSpeed(this)"><div class="pkg-icon">&#128338;</div><div class="pkg-info"><strong data-i18n="standard">Standard</strong><p data-i18n="standardDesc">Flexible same-day window</p></div><div class="pkg-price"><strong data-i18n="free">Free</strong><p data-i18n="today">Today</p></div><div class="radio-circle"></div></div>
+        <div class="pkg-option" onclick="selectSpeed(this)"><div class="pkg-icon">&#128338;</div><div class="pkg-info"><strong data-i18n="standard">Standard</strong><p data-i18n="standardDesc">Flexible same-day window</p></div><div class="pkg-price"><strong data-i18n="free">+0</strong><p data-i18n="today">Today</p></div><div class="radio-circle"></div></div>
       </div>
       <div class="modal-actions"><button class="btn btn-outline" onclick="closeSpeedModal()" data-i18n="back">Back</button><button class="btn btn-primary glow" onclick="finalizeOrder()" data-i18n="confirmOrder">Confirm Order &rarr;</button></div>
     </div>
@@ -329,7 +341,7 @@
     </div>
   </div>
 
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=6"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/skylink-mobile-app/sw.js');
@@ -462,7 +474,7 @@
     if (pm) document.getElementById('pickup-input').value = pm[1].trim();
     const dm = msg.match(/(?:giao đến|drop.?off|deliver(?:y)? to|destination)[:\s]+([^,.\n]+)/i);
     if (dm) document.getElementById('dropoff-input').value = dm[1].trim();
-    if (['confirmed','xác nhận','order confirmed','proceeding to checkout'].some(k => lower.includes(k))) { stopVoiceSession(); closeVoiceModal(); switchTab('order'); setTimeout(() => openPackageModal(), 400); }
+    if (['confirmed','xác nhận','order confirmed','proceeding to checkout'].some(k => lower.includes(k))) { stopVoiceSession(); closeVoiceModal(); switchTab('order'); setTimeout(() => openVoiceEstimateModal(), 400); }
   }
   async function playAudioChunk(b64) {
     const raw = atob(b64), bytes = new Uint8Array(raw.length);
