@@ -1,4 +1,4 @@
-const CACHE = 'skylink-v4';
+const CACHE = 'skylink-v5';
 const ASSETS = [
   '/skylink-mobile-app/',
   '/skylink-mobile-app/index.html',
@@ -22,6 +22,12 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    fetch(e.request)
+      .then(response => {
+        const copy = response.clone();
+        caches.open(CACHE).then(cache => cache.put(e.request, copy));
+        return response;
+      })
+      .catch(() => caches.match(e.request))
   );
 });
