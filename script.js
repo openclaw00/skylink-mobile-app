@@ -205,6 +205,7 @@ function switchTab(tabId) {
   });
   const targetTab = document.getElementById('tab-' + tabId);
   if (targetTab) targetTab.classList.add('active');
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 
   document.querySelectorAll('.nav-item').forEach(item => {
     item.classList.remove('active');
